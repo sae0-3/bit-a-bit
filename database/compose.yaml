@@ -1,0 +1,12 @@
+services:
+  database:
+    container_name: db-questeditor
+    image: postgres:17
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=questeditor
+    ports:
+      - 5432:5432
+    volumes:
+      - ./structure:/docker-entrypoint-initdb.d
