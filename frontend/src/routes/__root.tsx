@@ -8,10 +8,12 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import App from '../App'
 import CreateQuestion from '../pages/CreateQuestion'
+import { Header } from '../components/Header'
 
 export const rootRoute = createRootRoute({
   component: () => (
     <>
+      <Header />
       <Outlet />
       <TanStackRouterDevtools />
     </>
