@@ -7,6 +7,7 @@ import {
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import App from '../App'
+import CreateQuestion from '../pages/CreateQuestion'
 
 export const rootRoute = createRootRoute({
   component: () => (
@@ -23,8 +24,15 @@ const indexRoute = createRoute({
   component: () => <App />,
 })
 
+const createQuestionRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/create-question',
+  component: () => <CreateQuestion />,
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  createQuestionRoute,
 ])
 
 export const router = createRouter({ routeTree })
