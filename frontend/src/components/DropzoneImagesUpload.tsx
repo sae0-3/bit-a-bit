@@ -39,7 +39,7 @@ export const DropzoneImagesUpload = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div className="flex flex-col items-center justify-center">
       <div
         className={`flex items-center justify-center w-full h-12 border border-dashed md:h-20 ${isDragActive ? 'bg-gray-100' : ''}`}
         {...getRootProps()}
@@ -48,7 +48,7 @@ export const DropzoneImagesUpload = () => {
         <p className="text-center">Arrastra o haz click para subir imágenes</p>
       </div>
 
-      <div className="flex overflow-x-auto gap-4 w-full">
+      <div className={`flex overflow-x-auto gap-4 w-full ${imageSrcs.length > 0 ? 'mt-4' : ''}`}>
         {imageSrcs.map((src, index) => (
           <div key={index} className="relative w-24 h-24 shrink-0">
             <img
