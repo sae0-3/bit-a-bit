@@ -1,9 +1,10 @@
-import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { LuTrash2 } from 'react-icons/lu'
 
+import { useQuestionFormStore } from '../stores/question-form.store'
+
 export const DropzoneImagesUpload = () => {
-  const [imageSrcs, setImageSrcs] = useState<string[]>([])
+  const { images, addImage, removeImage } = useQuestionFormStore()
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { 'image/*': [] },
@@ -26,17 +27,13 @@ export const DropzoneImagesUpload = () => {
 
       Promise.all(readers)
         .then((images) => {
-          setImageSrcs((prev) => [...prev, ...images])
+          images.forEach(image => addImage(image))
         })
         .catch((error) => {
           console.error('Error cargando imágenes:', error)
         })
     }
   })
-
-  const handleRemoveImage = (index: number) => {
-    setImageSrcs((prev) => prev.filter((_, i) => i !== index))
-  }
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -48,8 +45,8 @@ export const DropzoneImagesUpload = () => {
         <p className="text-center">Arrastra o haz click para subir imágenes</p>
       </div>
 
-      <div className={`flex overflow-x-auto gap-4 w-full ${imageSrcs.length > 0 ? 'mt-4' : ''}`}>
-        {imageSrcs.map((src, index) => (
+      <div className={`flex overflow-x-auto gap-4 w-full ${images.length > 0 ? 'mt-4' : ''}`}>
+        {images.map((src, index) => (
           <div key={index} className="relative w-24 h-24 shrink-0">
             <img
               src={src}
@@ -57,7 +54,7 @@ export const DropzoneImagesUpload = () => {
               className="w-full h-full object-cover rounded"
             />
             <button
-              onClick={() => handleRemoveImage(index)}
+              onClick={() => removeImage(index)}
               className="absolute top-0 right-0 bg-opacity-60 text-white rounded-full w-6 h-6 flex items-center justify-center bg-red-600 hover:cursor-pointer"
             >
               <LuTrash2 />
