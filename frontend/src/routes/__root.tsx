@@ -7,8 +7,9 @@ import {
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import App from '../App'
-import CreateQuestion from '../pages/CreateQuestion'
 import { Header } from '../components/Header'
+import CreateQuestion from '../pages/CreateQuestion'
+import ViewStudent from '../pages/ViewStudent'
 
 export const rootRoute = createRootRoute({
   component: () => (
@@ -32,9 +33,16 @@ const createQuestionRoute = createRoute({
   component: () => <CreateQuestion />,
 })
 
+const viewStudentRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/view-student',
+  component: () => <ViewStudent />,
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   createQuestionRoute,
+  viewStudentRoute,
 ])
 
 export const router = createRouter({ routeTree })

@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { LuPlus } from 'react-icons/lu'
+import { LuPlus, LuUserRoundPen } from 'react-icons/lu'
 
 import { AddOptionModal } from '../components/AddOptionModal'
 import { DescriptionEditor } from '../components/DescriptionEditor'
 import { Options } from '../components/Options'
 import { useQuestionFormStore } from '../stores/question-form.store'
+import { Link } from '@tanstack/react-router'
 
 export default function CreateQuestion() {
   const [viewModal, setviewModal] = useState(false)
@@ -28,6 +29,13 @@ export default function CreateQuestion() {
       </button>
 
       <Options />
+
+      <Link
+        className="bg-primary-dark text-white p-2 rounded hover:cursor-pointer flex items-center gap-1"
+        to="/view-student"
+      >
+        <span>Vista de estudiante</span> <LuUserRoundPen />
+      </Link>
     </div >
   )
 }
