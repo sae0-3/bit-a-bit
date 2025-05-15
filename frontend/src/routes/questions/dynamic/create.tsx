@@ -1,13 +1,17 @@
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import { LuPlus, LuUserRoundPen } from 'react-icons/lu'
 
-import { AddOptionModal } from '../components/AddOptionModal'
-import { DescriptionEditor } from '../components/DescriptionEditor'
-import { Options } from '../components/Options'
-import { useQuestionFormStore } from '../stores/question-form.store'
-import { Link } from '@tanstack/react-router'
+import { AddOptionModal } from '../../../components/AddOptionModal'
+import { DescriptionEditor } from '../../../components/DescriptionEditor'
+import { Options } from '../../../components/Options'
+import { useQuestionFormStore } from '../../../stores/question-form.store'
 
-export default function CreateQuestion() {
+export const Route = createFileRoute('/questions/dynamic/create')({
+  component: RouteComponent,
+})
+
+function RouteComponent() {
   const [viewModal, setviewModal] = useState(false)
   const { addOption } = useQuestionFormStore()
 
@@ -25,16 +29,18 @@ export default function CreateQuestion() {
       <button className="bg-primary-dark text-white p-2 rounded hover:cursor-pointer flex items-center gap-1"
         onClick={() => setviewModal(true)}
       >
-        <span>Agregar opciones</span> <LuPlus />
+        <span>Agregar opciones</span>
+        <LuPlus />
       </button>
 
       <Options />
 
       <Link
+        to="/questions/dynamic/view"
         className="bg-primary-dark text-white p-2 rounded hover:cursor-pointer flex items-center gap-1"
-        to="/view-student"
       >
-        <span>Vista de estudiante</span> <LuUserRoundPen />
+        <span>Vista de estudiante</span>
+        <LuUserRoundPen />
       </Link>
     </div >
   )
