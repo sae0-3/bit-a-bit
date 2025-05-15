@@ -1,17 +1,15 @@
-import { useDroppable } from '@dnd-kit/core'
 import { LuTrash } from 'react-icons/lu'
+import { DroppableContainer } from './DroppableContainer'
 
 export const TrashBin = () => {
-  const { setNodeRef, isOver } = useDroppable({
-    id: 'trash-bin',
-  })
-
   return (
-    <div
-      ref={setNodeRef}
-      className={`flex items-center justify-center w-full border-2 border-dashed p-2 ${isOver ? 'bg-red-200' : ''}`}
-    >
-      <LuTrash className="text-2xl" />
-    </div>
+    <DroppableContainer
+      id="trash-bin"
+      renderComponent={({ isOver }) => (
+        <div className={`flex items-center justify-center border-2 p-1 border-dashed ${isOver ? 'bg-red-200' : ''}`}>
+          <LuTrash className="text-2xl" />
+        </div>
+      )}
+    />
   )
 }
