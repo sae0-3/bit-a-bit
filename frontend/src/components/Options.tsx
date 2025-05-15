@@ -9,7 +9,7 @@ import { LuPlus } from 'react-icons/lu'
 import { useSensors } from '../hooks/useSensors'
 import { useQuestionFormStore } from '../stores/question-form.store'
 import { AddOptionModal } from './AddOptionModal'
-import { DraggableValue } from './DraggableValue'
+import { DraggableItem } from './DraggableItem'
 import { TrashBin } from './TrashBin'
 
 export const Options = () => {
@@ -56,24 +56,32 @@ export const Options = () => {
         <div className="flex flex-col">
           <div className={`flex gap-2 flex-wrap justify-center ${options.length > 0 ? 'mb-4' : ''}`}>
             {options.map((value, index) => (
-              <DraggableValue
+              <DraggableItem
                 key={`${value}-${index}`}
                 id={value}
-                label={value}
+                renderComponent={() => (
+                  <p className="border border-primary-dark p-2 rounded-lg">
+                    {value}
+                  </p>
+                )}
               />
             ))}
           </div>
 
-          <TrashBin />
-
-          <DragOverlay>
-            {activeId ? (
-              <DraggableValue
+          {activeId && (
+            <DragOverlay>
+              <DraggableItem
                 id={activeId}
-                label={activeId}
+                renderComponent={() => (
+                  <p className="border border-primary-dark p-2 rounded-lg">
+                    {activeId}
+                  </p>
+                )}
               />
-            ) : null}
-          </DragOverlay>
+            </DragOverlay>
+          )}
+
+          <TrashBin />
         </div>
       </DndContext>
     </div>
