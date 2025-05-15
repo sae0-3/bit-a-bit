@@ -11,7 +11,9 @@ export const Route = createFileRoute('/questions/dynamic/view')({
 function ViewQuestionComponent() {
   return (
     <div className="w-full flex flex-col items-center gap-4 my-4">
-      <DescriptionStudent />
+      <div className="w-10/12">
+        <DescriptionStudent />
+      </div>
 
       <CreateAnswerStudent />
 

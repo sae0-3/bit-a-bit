@@ -4,14 +4,21 @@ import { useQuestionFormStore } from '../stores/question-form.store'
 
 export const DescriptionStudent = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const { description, images } = useQuestionFormStore()
+  const { title, description, images } = useQuestionFormStore()
 
   return (
     <>
-      <section className={`w-10/12 flex flex-col ${images.length > 0 ? 'gap-4' : ''}`}>
-        <p>{description}</p>
+      <section className="w-full flex flex-col gap-4">
+        <div className="flex flex-col gap-2 w-full">
+          <h1 className={`font-bold text-2xl text-center ${!title ? 'opacity-50' : null}`}>
+            {title || 'Sin título'}
+          </h1>
+          <p className={`${!description ? 'opacity-50' : null}`}>
+            {description || 'Sin descripción...'}
+          </p>
+        </div>
 
-        <div className="flex overflow-x-auto gap-3 md:gap-4 w-full">
+        <div className="flex overflow-x-auto gap-3 md:gap-4 w-full" hidden={!images.length}>
           {images.map((src, index) => (
             <div
               key={index}

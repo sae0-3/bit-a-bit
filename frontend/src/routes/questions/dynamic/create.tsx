@@ -11,8 +11,10 @@ export const Route = createFileRoute('/questions/dynamic/create')({
 
 function RouteComponent() {
   return (
-    <div className="flex w-full flex-col justify-center items-center gap-8 py-6">
-      <div className="w-10/12 flex flex-col items-center justify-center gap-4 lg:flex-row lg:gap-8">
+    <section className="flex w-full flex-col justify-center items-center gap-5 py-5">
+      <h1 className="font-bold text-2xl">Crear Pregunta</h1>
+
+      <div className="w-10/12 flex flex-col justify-center gap-4 lg:flex-row lg:gap-8">
         <div className="w-full lg:w-1/2">
           <DescriptionEditor />
         </div>
@@ -22,7 +24,7 @@ function RouteComponent() {
         </div>
       </div>
 
-      <div className="w-10/12 flex flex-col items-center justify-center gap-4 lg:flex-row lg:gap-8">
+      <div className="w-10/12 flex flex-col justify-center gap-4 lg:flex-row lg:gap-8">
         <div className="w-full lg:w-1/2">
           <Options />
         </div>
@@ -35,6 +37,6 @@ function RouteComponent() {
         <span>Vista de estudiante</span>
         <LuUserRoundPen />
       </Link>
-    </div >
+    </section >
   )
 }

@@ -1,10 +1,12 @@
 import { create } from 'zustand'
 
 interface QuestionFormStore {
+  title: string
   description: string
   images: string[]
   options: string[]
 
+  setTitle: (title: string) => void
   setDescription: (description: string) => void
   setImages: (images: string[]) => void
   addImage: (image: string) => void
@@ -16,9 +18,12 @@ interface QuestionFormStore {
 }
 
 export const useQuestionFormStore = create<QuestionFormStore>((set) => ({
+  title: '',
   description: '',
   images: [],
   options: [],
+
+  setTitle: (title) => set({ title }),
 
   setDescription: (description) => set({ description }),
 
