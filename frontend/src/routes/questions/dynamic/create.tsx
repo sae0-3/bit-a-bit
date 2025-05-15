@@ -1,39 +1,32 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useState } from 'react'
-import { LuPlus, LuUserRoundPen } from 'react-icons/lu'
+import { LuUserRoundPen } from 'react-icons/lu'
 
-import { AddOptionModal } from '../../../components/AddOptionModal'
 import { DescriptionEditor } from '../../../components/DescriptionEditor'
+import { DropzoneImagesUpload } from '../../../components/DropzoneImagesUpload'
 import { Options } from '../../../components/Options'
-import { useQuestionFormStore } from '../../../stores/question-form.store'
 
 export const Route = createFileRoute('/questions/dynamic/create')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const [viewModal, setviewModal] = useState(false)
-  const { addOption } = useQuestionFormStore()
-
   return (
-    <div className="flex w-full flex-col justify-center items-center gap-4">
-      <DescriptionEditor />
+    <div className="flex w-full flex-col justify-center items-center gap-8 py-6">
+      <div className="w-10/12 flex flex-col items-center justify-center gap-4 lg:flex-row lg:gap-8">
+        <div className="w-full lg:w-1/2">
+          <DescriptionEditor />
+        </div>
 
-      {viewModal && (
-        <AddOptionModal
-          addOption={addOption}
-          onClose={() => setviewModal(false)}
-        />
-      )}
+        <div className="w-full lg:w-1/2">
+          <DropzoneImagesUpload />
+        </div>
+      </div>
 
-      <button className="bg-primary-dark text-white p-2 rounded hover:cursor-pointer flex items-center gap-1"
-        onClick={() => setviewModal(true)}
-      >
-        <span>Agregar opciones</span>
-        <LuPlus />
-      </button>
-
-      <Options />
+      <div className="w-10/12 flex flex-col items-center justify-center gap-4 lg:flex-row lg:gap-8">
+        <div className="w-full lg:w-1/2">
+          <Options />
+        </div>
+      </div>
 
       <Link
         to="/questions/dynamic/view"

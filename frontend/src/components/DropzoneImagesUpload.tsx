@@ -36,13 +36,13 @@ export const DropzoneImagesUpload = () => {
   })
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center w-full">
       <div
-        className={`flex items-center justify-center w-full h-12 border border-dashed md:h-20 ${isDragActive ? 'bg-gray-100' : ''}`}
+        className={`flex items-center justify-center w-full h-12 border border-dashed cursor-pointer ${isDragActive ? 'bg-gray-100' : ''}`}
         {...getRootProps()}
       >
         <input {...getInputProps()} />
-        <p className="text-center">Arrastra o haz click para subir imágenes</p>
+        <p className="text-center select-none">Arrastra o haz click para subir imágenes</p>
       </div>
 
       <div className={`flex overflow-x-auto gap-4 w-full ${images.length > 0 ? 'mt-4' : ''}`}>
