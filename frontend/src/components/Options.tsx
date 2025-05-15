@@ -59,8 +59,8 @@ export const Options = () => {
               <DraggableItem
                 key={`${value}-${index}`}
                 id={value}
-                renderComponent={() => (
-                  <p className="border border-primary-dark p-2 rounded-lg">
+                renderComponent={({ isDragging }) => (
+                  <p className={`border border-primary-dark p-2 rounded-lg ${isDragging ? 'invisible' : ''}`}>
                     {value}
                   </p>
                 )}

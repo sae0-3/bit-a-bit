@@ -24,7 +24,7 @@ export const DraggableItem = ({
 
   return (
     <div
-      className={`draggable select-none touch-none cursor-grab ${isDragging ? 'invisible' : ''} ${className ?? ''}`}
+      className={`draggable select-none touch-none cursor-grab ${className ?? ''}`}
       ref={setNodeRef}
       {...listeners}
       {...attributes}
