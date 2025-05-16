@@ -5,6 +5,10 @@ interface QuestionFormStore {
   description: string
   images: string[]
   options: string[]
+  responses: {
+    name: string
+    options: string[]
+  }[]
 
   setTitle: (title: string) => void
   setDescription: (description: string) => void
@@ -15,6 +19,7 @@ interface QuestionFormStore {
   addOption: (option: string) => void
   removeOption: (index: number) => void
   resetForm: () => void
+  addResponse: (response: { name: string, options: string[] }) => void
 }
 
 export const useQuestionFormStore = create<QuestionFormStore>((set) => ({
@@ -22,6 +27,7 @@ export const useQuestionFormStore = create<QuestionFormStore>((set) => ({
   description: '',
   images: [],
   options: [],
+  responses: [],
 
   setTitle: (title) => set({ title }),
 
@@ -46,6 +52,9 @@ export const useQuestionFormStore = create<QuestionFormStore>((set) => ({
     set((state) => ({
       options: state.options.filter((_, i) => i !== index)
     })),
+
+  addResponse: (response) =>
+    set((state) => ({ responses: [...state.responses, response] })),
 
   resetForm: () => set({
     description: '',
