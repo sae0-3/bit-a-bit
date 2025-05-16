@@ -1,89 +1,113 @@
 import { closestCenter, DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/core'
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useState } from 'react'
 
+import { useSensors } from '../hooks/useSensors'
 import { useQuestionFormStore } from '../stores/question-form.store'
-import { ListContainer } from './ListContainer'
+import { Option } from '../types/form-question'
+import { handleReorder } from '../utils/dnd'
+import { DroppableContainer } from './DroppableContainer'
+import { SortableListContainer } from './SortableListContainer'
 
 export const CreateAnswerStudent = () => {
-  const { options } = useQuestionFormStore()
-  const [lists, setLists] = useState({
-    left: options,
-    right: []
-  })
-  const [activeId, setActiveId] = useState<string | null>(null)
+  const { options, getOptionById } = useQuestionFormStore()
+  const [activeOpt, setActiveOpt] = useState<Option | null>(null)
+  const [listOptions, setListOptions] = useState<Option[]>(options)
+  const [listAnswer, setListAnswer] = useState<Option[]>([])
+  const sensors = useSensors()
 
   const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(String(event.active.id));
-  };
+    const opt = getOptionById(String(event.active.id))
+    setActiveOpt(opt ?? null)
+  }
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
     if (!over) return
 
-    if (active.data.current?.list === over.data.current?.list) {
-      const listKey = active.data.current?.list as keyof typeof lists
-      const oldIndex = active.data.current?.index
-      const newIndex = over.data.current?.index
+    const activeId = String(active.id)
+    const overId = String(over.id)
 
-      setLists(prev => ({
-        ...prev,
-        [listKey]: arrayMove(prev[listKey], oldIndex, newIndex)
-      }))
-    }
-    else {
-      const fromList = active.data.current?.list as keyof typeof lists
-      const toList = over.data.current?.list as keyof typeof lists
-      const itemIndex = active.data.current?.index
+    if (overId === 'options-list' || overId === 'answer-list') {
+      const fromOptions = listOptions.some(o => o.id === activeId)
+      const fromAnswer = listAnswer.some(o => o.id === activeId)
 
-      setLists(prev => {
-        const newFromList = [...prev[fromList]]
-        const newToList = [...prev[toList]]
-        const [movedItem] = newFromList.splice(itemIndex, 1)
-
-        return {
-          ...prev,
-          [fromList]: newFromList,
-          [toList]: [...newToList, movedItem]
-        }
-      })
+      if (fromOptions && overId === 'answer-list') {
+        const item = listOptions.find(o => o.id === activeId)!
+        setListOptions(prev => prev.filter(o => o.id !== activeId))
+        setListAnswer(prev => [...prev, item])
+      } else if (fromAnswer && overId === 'options-list') {
+        const item = listAnswer.find(o => o.id === activeId)!
+        setListAnswer(prev => prev.filter(o => o.id !== activeId))
+        setListOptions(prev => [...prev, item])
+      }
+    } else {
+      if (listOptions.some(o => o.id === activeId)) {
+        handleReorder<Option>(event, listOptions, setListOptions)
+      } else {
+        handleReorder<Option>(event, listAnswer, setListAnswer)
+      }
     }
 
-    setActiveId(null)
+    setActiveOpt(null)
   }
 
   return (
-    <div className="w-10/12 mx-auto">
+    <div className="w-full">
       <DndContext
+        sensors={sensors}
         collisionDetection={closestCenter}
-        modifiers={[restrictToVerticalAxis]}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex flex-col md:flex-row flex-wrap gap-4 justify-between">
-          <SortableContext
-            items={lists.left}
-            strategy={verticalListSortingStrategy}
-          >
-            <ListContainer title="Opciones" items={lists.left} listName="left" />
-          </SortableContext>
+        <div className="flex flex-col gap-8 lg:flex-row">
+          <div className="w-full flex flex-col items-center justify-center gap-4 flex-1">
+            <p className="font-semibold text-center text-lg">Opciones</p>
 
-          <SortableContext
-            items={lists.right}
-            strategy={verticalListSortingStrategy}
-          >
-            <ListContainer title="Respuesta" items={lists.right} listName="right" />
-          </SortableContext>
+            <DroppableContainer
+              id="options-list"
+              className="w-full border rounded min-h-10 p-4 flex-1"
+              renderComponent={() => (
+                <SortableListContainer
+                  className="flex flex-col gap-2 h-full"
+                  items={listOptions}
+                  renderComponent={({ isDragging, value }) => (
+                    <p className={`border text-center p-1 rounded ${isDragging ? 'invisible' : ''}`}>
+                      {value}
+                    </p>
+                  )}
+                />
+              )}
+            />
+          </div>
+
+          <div className="w-full flex flex-col items-center justify-center gap-4 flex-1">
+            <p className="font-semibold text-center text-lg">Respuesta</p>
+
+            <DroppableContainer
+              id="answer-list"
+              className="w-full border rounded min-h-10 p-4 flex-1"
+              renderComponent={() => (
+                <SortableListContainer
+                  className="flex flex-col gap-2 h-full"
+                  items={listAnswer}
+                  renderComponent={({ isDragging, value }) => (
+                    <p className={`border text-center p-1 rounded ${isDragging ? 'invisible' : ''}`}>
+                      {value}
+                    </p>
+                  )}
+                />
+              )}
+            />
+          </div>
         </div>
 
-        <DragOverlay>
-          {activeId ? (
-            <div className="bg-white border-2 border-blue-500 rounded-lg px-4 py-2 shadow-xl">
-              {lists.left.find(i => i === activeId) || lists.right.find(i => i === activeId)}
-            </div>
-          ) : null}
-        </DragOverlay>
+        {activeOpt?.value && (
+          <DragOverlay>
+            <p className="border text-center p-1 rounded cursor-grab">
+              {activeOpt.value}
+            </p>
+          </DragOverlay>
+        )}
       </DndContext>
     </div>
   )

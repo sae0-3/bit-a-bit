@@ -2,30 +2,36 @@ import {
   DndContext,
   DragEndEvent,
   DragOverlay,
+  DragStartEvent,
 } from '@dnd-kit/core'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { LuPlus } from 'react-icons/lu'
 
 import { useSensors } from '../hooks/useSensors'
 import { useQuestionFormStore } from '../stores/question-form.store'
+import { Option } from '../types/form-question'
 import { AddOptionModal } from './AddOptionModal'
 import { DraggableItem } from './DraggableItem'
 import { TrashBin } from './TrashBin'
 
 export const Options = () => {
   const [viewModal, setviewModal] = useState(false)
-  const [activeId, setActiveId] = useState<string | null>(null)
+  const [activeOpt, setActiveOpt] = useState<Option | null>(null)
   const sensors = useSensors()
-  const { options, addOption, removeOption } = useQuestionFormStore()
+  const { options, addOption, removeOption, getOptionById } = useQuestionFormStore()
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { over, active } = event
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    const opt = getOptionById(String(event.active.id))
+    setActiveOpt(opt ?? null)
+  }, [getOptionById])
 
-    if (over?.id === 'trash-bin') {
-      const id = String(active.id)
-      removeOption(options.findIndex(opt => opt === id));
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    if (event.over?.id === 'trash-bin') {
+      removeOption(String(event.active.id))
     }
-  }
+
+    setActiveOpt(null)
+  }, [removeOption])
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -45,20 +51,15 @@ export const Options = () => {
 
       <DndContext
         sensors={sensors}
-        onDragStart={(event) => {
-          setActiveId(String(event.active.id))
-        }}
-        onDragEnd={(event: DragEndEvent) => {
-          handleDragEnd(event)
-          setActiveId(null)
-        }}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
       >
         <div className="flex flex-col">
           <div className={`flex gap-2 flex-wrap justify-center ${options.length > 0 ? 'mb-4' : ''}`}>
-            {options.map((value, index) => (
+            {options.map(({ id, value }) => (
               <DraggableItem
-                key={`${value}-${index}`}
-                id={value}
+                key={id}
+                id={id}
                 renderComponent={({ isDragging }) => (
                   <p className={`border border-primary-dark p-2 rounded-lg ${isDragging ? 'invisible' : ''}`}>
                     {value}
@@ -68,16 +69,11 @@ export const Options = () => {
             ))}
           </div>
 
-          {activeId && (
+          {activeOpt?.value && (
             <DragOverlay>
-              <DraggableItem
-                id={activeId}
-                renderComponent={() => (
-                  <p className="border border-primary-dark p-2 rounded-lg">
-                    {activeId}
-                  </p>
-                )}
-              />
+              <p className="border border-primary-dark p-2 rounded-lg cursor-grab">
+                {activeOpt.value}
+              </p>
             </DragOverlay>
           )}
 

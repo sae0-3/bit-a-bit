@@ -15,7 +15,9 @@ function ViewQuestionComponent() {
         <DescriptionStudent />
       </div>
 
-      <CreateAnswerStudent />
+      <div className="w-10/12">
+        <CreateAnswerStudent />
+      </div>
 
       <section className="w-10/12 flex justify-between gap-4 flex-wrap">
         <Link
