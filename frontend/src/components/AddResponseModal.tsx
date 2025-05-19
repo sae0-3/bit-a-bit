@@ -1,31 +1,27 @@
-import { useState, DragEvent, useRef } from "react"
+import { useState } from "react"
+import { closestCenter, DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/core'
+
+import { useSensors } from "../hooks/useSensors"
+import { DroppableContainer } from "./DroppableContainer"
+import { SortableListContainer } from "./SortableListContainer"
+import { handleReorder } from "../utils/dnd"
+import { Option } from "../types/form-question"
+import { useQuestionFormStore } from "../stores/question-form.store"
 
 type AddResponseModalProps = {
-  addResponse: (response: { name: string, options: string[] }) => void
   onClose: () => void
-  availableOptions: string[]
 }
 
-type OptionItem = {
-  id: number
-  text: string
-  list: "options" | "response"
-  order: number
-}
+export const AddResponseModal = ({ onClose }: AddResponseModalProps) => {
+  const { getOptionById, options, addResponse } = useQuestionFormStore()
 
-export const AddResponseModal = ({ onClose, addResponse, availableOptions = [] }: AddResponseModalProps) => {
-  const [error, setError] = useState<string | null>(null)
   const [responseName, setResponseName] = useState("")
-  const idCounterRef = useRef(1)
+  const [error, setError] = useState<string | null>(null)
+  const [listOptions, setListOptions] = useState<Option[]>(options)
+  const [listAnswer, setListAnswer] = useState<Option[]>([])
+  const [activeOpt, setActiveOpt] = useState<Option | null>(null)
 
-  const [options, setOptions] = useState<OptionItem[]>(
-    availableOptions.map((option, index) => ({
-      id: idCounterRef.current++,
-      text: option,
-      list: "options",
-      order: index
-    }))
-  )
+  const sensors = useSensors()
 
   if (!onClose) return null
 
@@ -34,50 +30,48 @@ export const AddResponseModal = ({ onClose, addResponse, availableOptions = [] }
       setError("El nombre no puede estar vacío")
       return
     }
-
-    const selectedOptions = getList("response").map(item => item.text)
-
-    addResponse({
-      name: responseName,
-      options: selectedOptions
-    })
-
+    if (listAnswer.length === 0) {
+      setError("Debes agregar al menos una opción")
+      return
+    }
+    addResponse(responseName, listAnswer)
     onClose()
   }
 
-  const getList = (list: "options" | "response"): OptionItem[] => {
-    return options
-      .filter(item => item.list === list)
-      .sort((a, b) => a.order - b.order)
+  const handleDragStart = (event: DragStartEvent) => {
+    const opt = getOptionById(String(event.active.id))
+    setActiveOpt(opt ?? null)
   }
 
-  const startDrag = (evt: DragEvent<HTMLDivElement>, item: OptionItem) => {
-    evt.dataTransfer.setData('itemID', item.id.toString())
-  }
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+    if (!over) return
 
-  const draggingOver = (evt: DragEvent<HTMLDivElement>) => {
-    evt.preventDefault()
-  }
+    const activeId = String(active.id)
+    const overId = String(over.id)
 
-  const onDrop = (evt: DragEvent<HTMLDivElement>, listName: "options" | "response") => {
-    const itemID = parseInt(evt.dataTransfer.getData('itemID'))
+    if (overId === 'options-list' || overId === 'answer-list') {
+      const fromOptions = listOptions.some(o => o.id === activeId)
+      const fromAnswer = listAnswer.some(o => o.id === activeId)
 
-    const draggedItem = options.find(item => item.id === itemID)
-    if (!draggedItem) return
-    if (draggedItem.list === listName) return
-
-    const maxOrder = Math.max(
-      ...options.filter(item => item.list === listName).map(item => item.order),
-      -1
-    ) + 1
-
-    const newOptions = options.map(item => {
-      if (item.id === itemID) {
-        return { ...item, list: listName, order: maxOrder }
+      if (fromOptions && overId === 'answer-list') {
+        const item = listOptions.find(o => o.id === activeId)!
+        setListOptions(prev => prev.filter(o => o.id !== activeId))
+        setListAnswer(prev => [...prev, item])
+      } else if (fromAnswer && overId === 'options-list') {
+        const item = listAnswer.find(o => o.id === activeId)!
+        setListAnswer(prev => prev.filter(o => o.id !== activeId))
+        setListOptions(prev => [...prev, item])
       }
-      return item
-    })
-    setOptions(newOptions)
+    } else {
+      if (listOptions.some(o => o.id === activeId)) {
+        handleReorder<Option>(event, listOptions, setListOptions)
+      } else {
+        handleReorder<Option>(event, listAnswer, setListAnswer)
+      }
+    }
+
+    setActiveOpt(null)
   }
 
   return (
@@ -101,51 +95,62 @@ export const AddResponseModal = ({ onClose, addResponse, availableOptions = [] }
         <div className="my-4">
           <p className="text-sm text-gray-600 mb-2">Arrastra las opciones para formar tu respuesta:</p>
 
-          <div className="flex flex-col md:flex-row flex-wrap gap-4 justify-between">
-            <div className="w-full md:w-5/12 bg-gray-50 rounded-lg p-3">
-              <h3 className="font-medium text-gray-700 mb-2">Opciones</h3>
-              <div
-                className="min-h-40 border border-dashed border-gray-300 rounded-lg p-2"
-                onDragOver={(evt) => draggingOver(evt)}
-                onDrop={(evt) => onDrop(evt, "options")}
-              >
-                {getList("options").map(item => (
-                  <div
-                    key={item.id}
-                    className="bg-white border border-gray-200 rounded-lg px-4 py-2 mb-2 shadow-sm cursor-move"
-                    draggable
-                    onDragStart={(evt) => startDrag(evt, item)}
-                    onDragOver={(evt) => draggingOver(evt)}
-                    onDrop={(evt) => onDrop(evt, "options")}
-                  >
-                    {item.text}
-                  </div>
-                ))}
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="flex flex-col gap-8 lg:flex-row">
+              <div className="w-full flex flex-col items-center justify-center gap-4 flex-1">
+                <p className="font-semibold text-center text-lg">Opciones</p>
+
+                <DroppableContainer
+                  id="options-list"
+                  className="w-full border rounded min-h-10 p-4 flex-1"
+                  renderComponent={() => (
+                    <SortableListContainer
+                      className="flex flex-col gap-2 h-full"
+                      items={listOptions}
+                      renderComponent={({ isDragging, value }) => (
+                        <p className={`border text-center p-1 rounded ${isDragging ? 'invisible' : ''}`}>
+                          {value}
+                        </p>
+                      )}
+                    />
+                  )}
+                />
+              </div>
+
+              <div className="w-full flex flex-col items-center justify-center gap-4 flex-1">
+                <p className="font-semibold text-center text-lg">Respuesta</p>
+
+                <DroppableContainer
+                  id="answer-list"
+                  className="w-full border rounded min-h-10 p-4 flex-1"
+                  renderComponent={() => (
+                    <SortableListContainer
+                      className="flex flex-col gap-2 h-full"
+                      items={listAnswer}
+                      renderComponent={({ isDragging, value }) => (
+                        <p className={`border text-center p-1 rounded ${isDragging ? 'invisible' : ''}`}>
+                          {value}
+                        </p>
+                      )}
+                    />
+                  )}
+                />
               </div>
             </div>
 
-            <div className="w-full md:w-5/12 bg-gray-50 rounded-lg p-3">
-              <h3 className="font-medium text-gray-700 mb-2">Respuesta</h3>
-              <div
-                className="min-h-40 border border-dashed border-gray-300 rounded-lg p-2"
-                onDragOver={(evt) => draggingOver(evt)}
-                onDrop={(evt) => onDrop(evt, "response")}
-              >
-                {getList("response").map(item => (
-                  <div
-                    key={item.id}
-                    className="bg-white border border-gray-200 rounded-lg px-4 py-2 mb-2 shadow-sm cursor-move"
-                    draggable
-                    onDragStart={(evt) => startDrag(evt, item)}
-                    onDragOver={(evt) => draggingOver(evt)}
-                    onDrop={(evt) => onDrop(evt, "response")}
-                  >
-                    {item.text}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+            {activeOpt?.value && (
+              <DragOverlay>
+                <p className="border text-center p-1 rounded cursor-grab">
+                  {activeOpt.value}
+                </p>
+              </DragOverlay>
+            )}
+          </DndContext>
         </div>
 
         <div className="flex justify-around mt-6">
