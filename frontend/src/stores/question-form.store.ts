@@ -20,7 +20,7 @@ interface QuestionFormStore {
   addOption: (value: string) => void
   removeOption: (id: string) => void
 
-  addResponse: (response: Omit<Response, 'id'>) => void
+  addResponse: (name: string, options: Option[]) => void
   removeResponse: (id: string) => void
 
   resetForm: () => void
@@ -80,12 +80,13 @@ export const useQuestionFormStore = create<QuestionFormStore>((set, get) => ({
     })
   },
 
-  addResponse: (response) => set((state) => ({
+  addResponse: (name: string, options: Option[]) => set((state) => ({
     responses: [
       ...state.responses,
       {
-        ...response,
         id: crypto.randomUUID(),
+        name,
+        options,
       }
     ]
   })),
