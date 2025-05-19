@@ -1,4 +1,4 @@
-import { closestCenter, DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/core'
+import { pointerWithin, DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/core'
 import { useState } from 'react'
 
 import { useSensors } from '../hooks/useSensors'
@@ -55,7 +55,7 @@ export const CreateAnswerStudent = () => {
     <div className="w-full">
       <DndContext
         sensors={sensors}
-        collisionDetection={closestCenter}
+        collisionDetection={pointerWithin}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >

@@ -20,7 +20,12 @@ export const DroppableContainer = ({
   return (
     <div
       ref={setNodeRef}
-      className={className ?? ''}
+      className={`
+        ${className ?? ''}
+        relative
+        min-h-[50px] p-4
+        ${isOver ? 'bg-secondary-gray' : ''}
+      `}
     >
       {renderComponent({ isOver })}
     </div>

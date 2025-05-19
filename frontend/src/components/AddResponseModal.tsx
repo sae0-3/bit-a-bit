@@ -1,29 +1,33 @@
-import { useState } from "react"
-import { closestCenter, DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/core'
+import { useState } from 'react'
+import {
+  DndContext,
+  DragStartEvent,
+  DragEndEvent,
+  DragOverlay,
+  pointerWithin,
+} from '@dnd-kit/core'
 
-import { useSensors } from "../hooks/useSensors"
-import { DroppableContainer } from "./DroppableContainer"
-import { SortableListContainer } from "./SortableListContainer"
-import { handleReorder } from "../utils/dnd"
-import { Option } from "../types/form-question"
-import { useQuestionFormStore } from "../stores/question-form.store"
+import { useSensors } from '../hooks/useSensors'
+import { DroppableContainer } from './DroppableContainer'
+import { SortableListContainer } from './SortableListContainer'
+import { handleReorder } from '../utils/dnd'
+import { Option } from '../types/form-question'
+import { useQuestionFormStore } from '../stores/question-form.store'
 
 type AddResponseModalProps = {
   onClose: () => void
 }
 
-export const AddResponseModal = ({ onClose }: AddResponseModalProps) => {
+export const AddResponseModal: React.FC<AddResponseModalProps> = ({ onClose }) => {
   const { getOptionById, options, addResponse } = useQuestionFormStore()
 
-  const [responseName, setResponseName] = useState("")
+  const [responseName, setResponseName] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [listOptions, setListOptions] = useState<Option[]>(options)
   const [listAnswer, setListAnswer] = useState<Option[]>([])
   const [activeOpt, setActiveOpt] = useState<Option | null>(null)
 
   const sensors = useSensors()
-
-  if (!onClose) return null
 
   const handleAdd = () => {
     if (responseName.trim() === '') {
@@ -84,27 +88,26 @@ export const AddResponseModal = ({ onClose }: AddResponseModalProps) => {
             placeholder="Ingrese el nombre de la respuesta"
             className="mt-2 w-full h-10 border border-gray-300 rounded px-3"
             value={responseName}
-            onChange={(e) => setResponseName(e.target.value)}
+            onChange={e => setResponseName(e.target.value)}
           />
         </div>
 
-        {error && (
-          <p className="text-red-500 text-sm mb-2">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
 
         <div className="my-4">
-          <p className="text-sm text-gray-600 mb-2">Arrastra las opciones para formar tu respuesta:</p>
+          <p className="text-sm text-gray-600 mb-2">
+            Arrastra las opciones para formar tu respuesta:
+          </p>
 
           <DndContext
             sensors={sensors}
-            collisionDetection={closestCenter}
+            collisionDetection={pointerWithin}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           >
             <div className="flex flex-col gap-8 lg:flex-row">
               <div className="w-full flex flex-col items-center justify-center gap-4 flex-1">
                 <p className="font-semibold text-center text-lg">Opciones</p>
-
                 <DroppableContainer
                   id="options-list"
                   className="w-full border rounded min-h-10 p-4 flex-1"
@@ -124,7 +127,6 @@ export const AddResponseModal = ({ onClose }: AddResponseModalProps) => {
 
               <div className="w-full flex flex-col items-center justify-center gap-4 flex-1">
                 <p className="font-semibold text-center text-lg">Respuesta</p>
-
                 <DroppableContainer
                   id="answer-list"
                   className="w-full border rounded min-h-10 p-4 flex-1"
