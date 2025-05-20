@@ -15,7 +15,7 @@ export const StudentView = () => {
       </div>
 
       <section className="w-10/12 flex justify-end gap-4 flex-wrap">
-        <button className="bg-primary-dark text-white p-2 rounded hover:cursor-pointer flex items-center gap-1">
+        <button className="bg-primary-dark text-white py-2 px-4 rounded-lg hover:cursor-pointer flex items-center gap-1">
           <span>Verificar</span> <LuShieldCheck />
         </button>
       </section>

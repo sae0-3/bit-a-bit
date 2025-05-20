@@ -1,18 +1,18 @@
-import { useState } from 'react'
 import {
   DndContext,
-  DragStartEvent,
   DragEndEvent,
   DragOverlay,
+  DragStartEvent,
   pointerWithin,
 } from '@dnd-kit/core'
+import { useState } from 'react'
 
 import { useSensors } from '../hooks/useSensors'
+import { useQuestionFormStore } from '../stores/question-form.store'
+import { Option } from '../types/form-question'
+import { handleReorder } from '../utils/dnd'
 import { DroppableContainer } from './DroppableContainer'
 import { SortableListContainer } from './SortableListContainer'
-import { handleReorder } from '../utils/dnd'
-import { Option } from '../types/form-question'
-import { useQuestionFormStore } from '../stores/question-form.store'
 
 type AddResponseModalProps = {
   onClose: () => void
@@ -157,13 +157,13 @@ export const AddResponseModal: React.FC<AddResponseModalProps> = ({ onClose }) =
 
         <div className="flex justify-around mt-6">
           <button
-            className="bg-primary-dark text-white rounded px-4 py-2"
+            className="bg-primary-dark text-white rounded px-4 py-2 hover:cursor-pointer"
             onClick={handleAdd}
           >
             Agregar
           </button>
           <button
-            className="bg-primary-dark text-white rounded px-4 py-2"
+            className="bg-primary-dark text-white rounded px-4 py-2 hover:cursor-pointer"
             onClick={onClose}
           >
             Cancelar

@@ -35,12 +35,53 @@ export const Options = () => {
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <button className="bg-primary-dark text-white p-2 rounded hover:cursor-pointer flex items-center justify-center gap-1"
-        onClick={() => setviewModal(true)}
-      >
-        <span className="text-center">Agregar opciones</span>
-        <LuPlus />
-      </button>
+      <div className="flex justify-between flex-wrap items-center">
+        <h2 className="font-semibold text-lg">Opciones:</h2>
+
+        <button
+          className="bg-primary-dark text-white py-2 px-4 rounded-lg hover:cursor-pointer flex items-center justify-center gap-1"
+          onClick={() => setviewModal(true)}
+        >
+          <span className="text-center">Agregar</span>
+          <LuPlus />
+        </button>
+      </div>
+
+      {options.length === 0 ? (
+        <p className="text-center italic text-gray-500 my-2">No existen opciones registradas</p>
+      ) : (
+        <DndContext
+          sensors={sensors}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="flex flex-col">
+            <div className={`flex gap-2 flex-wrap justify-center ${options.length > 0 ? 'mb-4' : ''}`}>
+              {options.map(({ id, value }) => (
+                <DraggableItem
+                  key={id}
+                  id={id}
+                  renderComponent={({ isDragging }) => (
+                    <p className={`border border-primary-dark p-2 rounded-lg ${isDragging ? 'invisible' : ''}`}>
+                      {value}
+                    </p>
+                  )}
+                />
+              ))}
+            </div>
+
+            {activeOpt?.value && (
+              <DragOverlay>
+                <p className="border border-primary-dark p-2 rounded-lg cursor-grab">
+                  {activeOpt.value}
+                </p>
+              </DragOverlay>
+            )}
+
+            <TrashBin />
+          </div>
+        </DndContext>
+      )}
 
       {viewModal && (
         <AddOptionModal
@@ -48,38 +89,6 @@ export const Options = () => {
           onClose={() => setviewModal(false)}
         />
       )}
-
-      <DndContext
-        sensors={sensors}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <div className="flex flex-col">
-          <div className={`flex gap-2 flex-wrap justify-center ${options.length > 0 ? 'mb-4' : ''}`}>
-            {options.map(({ id, value }) => (
-              <DraggableItem
-                key={id}
-                id={id}
-                renderComponent={({ isDragging }) => (
-                  <p className={`border border-primary-dark p-2 rounded-lg ${isDragging ? 'invisible' : ''}`}>
-                    {value}
-                  </p>
-                )}
-              />
-            ))}
-          </div>
-
-          {activeOpt?.value && (
-            <DragOverlay>
-              <p className="border border-primary-dark p-2 rounded-lg cursor-grab">
-                {activeOpt.value}
-              </p>
-            </DragOverlay>
-          )}
-
-          <TrashBin />
-        </div>
-      </DndContext>
     </div>
   )
 }
