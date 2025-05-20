@@ -1,10 +1,23 @@
+import { useCanGoBack, useRouter } from '@tanstack/react-router'
 import { AddResponse } from './AddResponse'
 import { DescriptionEditor } from './DescriptionEditor'
 import { DropzoneImagesUpload } from './DropzoneImagesUpload'
 import { Options } from './Options'
 
 export const TeacherView = () => {
-  const handleCancel = () => { }
+  const router = useRouter()
+  const canGoBack = useCanGoBack()
+
+  const handleCancel = () => {
+    if (canGoBack) {
+      router.history.back()
+    } else {
+      router.navigate({
+        from: '/',
+        replace: true
+      })
+    }
+  }
 
   const handleCreateQuestion = () => { }
 

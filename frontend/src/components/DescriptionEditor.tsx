@@ -43,7 +43,7 @@ export const DescriptionEditor = () => {
           Ingrese la descripción:
         </label>
         <textarea
-          placeholder="Descripción del pregunta..."
+          placeholder="Descripción de la pregunta..."
           name="description"
           id="description"
           className="resize-none w-full border-b-2 border-b-gray-300 focus:outline-none focus:border-b-black pb-1 max-h-50 overflow-y-hidden"
