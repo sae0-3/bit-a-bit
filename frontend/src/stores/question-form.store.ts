@@ -1,14 +1,14 @@
 import { arrayMove } from '@dnd-kit/sortable'
 import { create } from 'zustand'
 
-import { Option, Response } from '../types/form-question'
+import { Answer, Option } from '../types/form-question'
 
 interface QuestionFormStore {
   title: string
   description: string
   images: string[]
   options: Option[]
-  responses: Response[]
+  responses: Answer[]
 
   setTitle: (title: string) => void
   setDescription: (description: string) => void
@@ -20,7 +20,7 @@ interface QuestionFormStore {
   addOption: (value: string) => void
   removeOption: (id: string) => void
 
-  addResponse: (name: string, options: Option[]) => void
+  addResponse: (response: Omit<Answer, 'id'>) => void
   removeResponse: (id: string) => void
 
   resetForm: () => void
@@ -80,13 +80,12 @@ export const useQuestionFormStore = create<QuestionFormStore>((set, get) => ({
     })
   },
 
-  addResponse: (name: string, options: Option[]) => set((state) => ({
+  addResponse: (response) => set((state) => ({
     responses: [
       ...state.responses,
       {
+        ...response,
         id: crypto.randomUUID(),
-        name,
-        options,
       }
     ]
   })),

@@ -3,7 +3,7 @@ export interface Option {
   value: string
 }
 
-export interface Response {
+export interface Answer {
   id: string
   name: string
   options: Option[]

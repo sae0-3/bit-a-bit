@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { LuPlus } from 'react-icons/lu'
 
 import { useQuestionFormStore } from '../stores/question-form.store'
-import { Response } from '../types/form-question'
+import { Answer } from '../types/form-question'
 import { AddResponseModal } from './AddResponseModal'
 import { ModalResponse } from './ModalResponse'
 
 export const AddResponse = () => {
   const [viewAddModal, setViewAddModal] = useState(false)
-  const [selectedResponse, setSelectedResponse] = useState<Response | null>(null)
+  const [selectedResponse, setSelectedResponse] = useState<Answer | null>(null)
 
   const { responses } = useQuestionFormStore()
 

@@ -38,7 +38,12 @@ export const AddResponseModal: React.FC<AddResponseModalProps> = ({ onClose }) =
       setError("Debes agregar al menos una opción")
       return
     }
-    addResponse(responseName, listAnswer)
+
+    addResponse({
+      name: responseName,
+      options: listAnswer,
+    })
+
     onClose()
   }
 

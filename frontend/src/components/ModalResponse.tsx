@@ -1,8 +1,8 @@
-import { Option, Response } from '../types/form-question'
+import { Answer, Option } from '../types/form-question'
 import { ModalCard } from './ModalCard'
 
 type ModalResponseProps = {
-  response: Response
+  response: Answer
   onClose: () => void
 }
 
