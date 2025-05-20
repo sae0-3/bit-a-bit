@@ -10,7 +10,7 @@ export const AddResponse = () => {
   const [viewAddModal, setViewAddModal] = useState(false)
   const [selectedResponse, setSelectedResponse] = useState<Answer | null>(null)
 
-  const { responses } = useQuestionFormStore()
+  const { answers } = useQuestionFormStore()
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -25,17 +25,17 @@ export const AddResponse = () => {
         </button>
       </div>
 
-      {responses.length === 0 ? (
+      {answers.length === 0 ? (
         <p className="text-center italic text-gray-500 my-2">No existen respuestas creadas</p>
       ) : (
         <div className="flex flex-wrap justify-center gap-4 w-full px-4">
-          {responses.map((resp) => (
+          {answers.map((answer) => (
             <button
-              key={resp.id}
+              key={answer.id}
               className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex-1 min-w-[200px] max-w-[300px] overflow-hidden text-ellipsis whitespace-nowrap hover:bg-gray-100 hover:cursor-pointer"
-              onClick={() => setSelectedResponse(resp)}
+              onClick={() => setSelectedResponse(answer)}
             >
-              {resp.name}
+              {answer.name}
             </button>
           ))}
         </div>
@@ -47,7 +47,7 @@ export const AddResponse = () => {
 
       {selectedResponse && (
         <ModalResponse
-          response={selectedResponse}
+          answer={selectedResponse}
           onClose={() => setSelectedResponse(null)}
         />
       )}

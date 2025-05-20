@@ -2,14 +2,14 @@ import { Answer, Option } from '../types/form-question'
 import { ModalCard } from './ModalCard'
 
 type ModalResponseProps = {
-  response: Answer
+  answer: Answer
   onClose: () => void
 }
 
-export const ModalResponse = ({ response, onClose }: ModalResponseProps) => {
+export const ModalResponse = ({ answer, onClose }: ModalResponseProps) => {
   return (
     <ModalCard
-      title={response.name}
+      title={answer.name}
       isOpen={true}
       onClose={onClose}
       footer={
@@ -24,7 +24,7 @@ export const ModalResponse = ({ response, onClose }: ModalResponseProps) => {
       }
     >
       <div className="flex flex-col gap-2">
-        {response.options.map((opt: Option) => (
+        {answer.options.map((opt: Option) => (
           <div
             key={opt.id}
             className="p-2 border rounded cursor-default"

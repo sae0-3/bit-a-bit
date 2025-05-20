@@ -8,7 +8,7 @@ interface QuestionFormStore {
   description: string
   images: string[]
   options: Option[]
-  responses: Answer[]
+  answers: Answer[]
 
   setTitle: (title: string) => void
   setDescription: (description: string) => void
@@ -20,8 +20,8 @@ interface QuestionFormStore {
   addOption: (value: string) => void
   removeOption: (id: string) => void
 
-  addResponse: (response: Omit<Answer, 'id'>) => void
-  removeResponse: (id: string) => void
+  addAnswer: (answer: Omit<Answer, 'id'>) => void
+  removeAnswer: (id: string) => void
 
   resetForm: () => void
   getOptionById: (id: string) => Option | undefined
@@ -32,7 +32,7 @@ export const useQuestionFormStore = create<QuestionFormStore>((set, get) => ({
   description: '',
   images: [],
   options: [],
-  responses: [],
+  answers: [],
 
   setTitle: (title) => set({ title }),
 
@@ -80,18 +80,18 @@ export const useQuestionFormStore = create<QuestionFormStore>((set, get) => ({
     })
   },
 
-  addResponse: (response) => set((state) => ({
-    responses: [
-      ...state.responses,
+  addAnswer: (answer) => set((state) => ({
+    answers: [
+      ...state.answers,
       {
-        ...response,
+        ...answer,
         id: crypto.randomUUID(),
       }
     ]
   })),
 
-  removeResponse: (id) => set((state) => ({
-    responses: state.responses.filter(res => res.id !== id)
+  removeAnswer: (id) => set((state) => ({
+    answers: state.answers.filter(res => res.id !== id)
   })),
 
   resetForm: () => set({
@@ -99,7 +99,7 @@ export const useQuestionFormStore = create<QuestionFormStore>((set, get) => ({
     description: '',
     images: [],
     options: [],
-    responses: [],
+    answers: [],
   }),
 
   getOptionById: (id) => get().options.find(opt => opt.id === id)

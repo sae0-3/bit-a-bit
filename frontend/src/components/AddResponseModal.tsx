@@ -19,7 +19,7 @@ type AddResponseModalProps = {
 }
 
 export const AddResponseModal: React.FC<AddResponseModalProps> = ({ onClose }) => {
-  const { getOptionById, options, addResponse } = useQuestionFormStore()
+  const { getOptionById, options, addAnswer } = useQuestionFormStore()
 
   const [responseName, setResponseName] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -39,7 +39,7 @@ export const AddResponseModal: React.FC<AddResponseModalProps> = ({ onClose }) =
       return
     }
 
-    addResponse({
+    addAnswer({
       name: responseName,
       options: listAnswer,
     })

@@ -1,4 +1,4 @@
-import { pointerWithin, DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/core'
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, pointerWithin } from '@dnd-kit/core'
 import { useState } from 'react'
 
 import { useSensors } from '../hooks/useSensors'
@@ -8,11 +8,16 @@ import { handleReorder } from '../utils/dnd'
 import { DroppableContainer } from './DroppableContainer'
 import { SortableListContainer } from './SortableListContainer'
 
-export const CreateAnswerStudent = () => {
+type CreateAnswerStudentProps = {
+  listAnswer: Option[]
+  setListAnswer: React.Dispatch<React.SetStateAction<Option[]>>;
+}
+
+export const CreateAnswerStudent = (props: CreateAnswerStudentProps) => {
   const { options, getOptionById } = useQuestionFormStore()
   const [activeOpt, setActiveOpt] = useState<Option | null>(null)
   const [listOptions, setListOptions] = useState<Option[]>(options)
-  const [listAnswer, setListAnswer] = useState<Option[]>([])
+  const { listAnswer, setListAnswer } = props
   const sensors = useSensors()
 
   const handleDragStart = (event: DragStartEvent) => {

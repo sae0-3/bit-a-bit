@@ -1,4 +1,6 @@
 import { useCanGoBack, useRouter } from '@tanstack/react-router'
+
+import { useQuestionFormStore } from '../stores/question-form.store'
 import { AddResponse } from './AddResponse'
 import { DescriptionEditor } from './DescriptionEditor'
 import { DropzoneImagesUpload } from './DropzoneImagesUpload'
@@ -7,6 +9,8 @@ import { Options } from './Options'
 export const TeacherView = () => {
   const router = useRouter()
   const canGoBack = useCanGoBack()
+
+  const { resetForm } = useQuestionFormStore()
 
   const handleCancel = () => {
     if (canGoBack) {
@@ -17,6 +21,8 @@ export const TeacherView = () => {
         replace: true
       })
     }
+
+    resetForm()
   }
 
   const handleCreateQuestion = () => { }
