@@ -1,50 +1,32 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { LuUserRoundPen } from 'react-icons/lu'
+import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
+import { FaChalkboardTeacher } from 'react-icons/fa'
+import { PiStudentFill } from 'react-icons/pi'
 
-import { DescriptionEditor } from '../../../components/DescriptionEditor'
-import { DropzoneImagesUpload } from '../../../components/DropzoneImagesUpload'
-import { Options } from '../../../components/Options'
-import { AddResponse } from '../../../components/AddResponse'
+import { StudentView } from '../../../components/StudentView'
+import { TeacherView } from '../../../components/TeacherView'
 
 export const Route = createFileRoute('/questions/dynamic/create')({
-  component: RouteComponent,
+  component: CreateQuestionComponent,
 })
 
-function RouteComponent() {
+function CreateQuestionComponent() {
+  const [isStudentView, setIsStudentView] = useState(false)
 
   return (
-    <section className="flex w-full flex-col justify-center items-center gap-5 py-5">
-      <h1 className="font-bold text-2xl">Crear Pregunta</h1>
+    <>
+      {isStudentView ? <StudentView /> : <TeacherView />}
 
-      <div className="w-10/12 flex flex-col justify-center gap-4 lg:flex-row lg:gap-8">
-        <div className="w-full lg:w-1/2">
-          <DescriptionEditor />
-        </div>
-
-        <div className="w-full lg:w-1/2">
-          <DropzoneImagesUpload />
-        </div>
-      </div>
-
-      <div className="w-10/12 flex flex-col justify-center gap-4 lg:flex-row lg:gap-8">
-        <div className="w-full lg:w-1/2">
-          <Options />
-        </div>
-      </div>
-
-      <div className="w-10/12 flex flex-col justify-center gap-4 lg:flex-row lg:gap-8">
-        <div className="w-full lg:w-1/2">
-          <AddResponse />
-        </div>
-      </div>
-
-      <Link
-        to="/questions/dynamic/view"
-        className="bg-primary-dark text-white p-2 rounded hover:cursor-pointer flex items-center gap-1"
+      <button
+        className="fixed bottom-4 right-4 bg-primary-dark text-white rounded-full aspect-square p-4 text-3xl cursor-pointer"
+        onClick={() => setIsStudentView((prev) => !prev)}
       >
-        <span>Vista de estudiante</span>
-        <LuUserRoundPen />
-      </Link>
-    </section >
+        {isStudentView ? (
+          <PiStudentFill />
+        ) : (
+          <FaChalkboardTeacher />
+        )}
+      </button>
+    </>
   )
 }

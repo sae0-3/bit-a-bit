@@ -13,7 +13,6 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as QuestionsDynamicIndexImport } from './routes/questions/dynamic/index'
-import { Route as QuestionsDynamicViewImport } from './routes/questions/dynamic/view'
 import { Route as QuestionsDynamicCreateImport } from './routes/questions/dynamic/create'
 
 // Create/Update Routes
@@ -27,12 +26,6 @@ const IndexRoute = IndexImport.update({
 const QuestionsDynamicIndexRoute = QuestionsDynamicIndexImport.update({
   id: '/questions/dynamic/',
   path: '/questions/dynamic/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const QuestionsDynamicViewRoute = QuestionsDynamicViewImport.update({
-  id: '/questions/dynamic/view',
-  path: '/questions/dynamic/view',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,13 +53,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuestionsDynamicCreateImport
       parentRoute: typeof rootRoute
     }
-    '/questions/dynamic/view': {
-      id: '/questions/dynamic/view'
-      path: '/questions/dynamic/view'
-      fullPath: '/questions/dynamic/view'
-      preLoaderRoute: typeof QuestionsDynamicViewImport
-      parentRoute: typeof rootRoute
-    }
     '/questions/dynamic/': {
       id: '/questions/dynamic/'
       path: '/questions/dynamic'
@@ -82,14 +68,12 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/questions/dynamic/create': typeof QuestionsDynamicCreateRoute
-  '/questions/dynamic/view': typeof QuestionsDynamicViewRoute
   '/questions/dynamic': typeof QuestionsDynamicIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/questions/dynamic/create': typeof QuestionsDynamicCreateRoute
-  '/questions/dynamic/view': typeof QuestionsDynamicViewRoute
   '/questions/dynamic': typeof QuestionsDynamicIndexRoute
 }
 
@@ -97,43 +81,27 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/questions/dynamic/create': typeof QuestionsDynamicCreateRoute
-  '/questions/dynamic/view': typeof QuestionsDynamicViewRoute
   '/questions/dynamic/': typeof QuestionsDynamicIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-  | '/'
-  | '/questions/dynamic/create'
-  | '/questions/dynamic/view'
-  | '/questions/dynamic'
+  fullPaths: '/' | '/questions/dynamic/create' | '/questions/dynamic'
   fileRoutesByTo: FileRoutesByTo
-  to:
-  | '/'
-  | '/questions/dynamic/create'
-  | '/questions/dynamic/view'
-  | '/questions/dynamic'
-  id:
-  | '__root__'
-  | '/'
-  | '/questions/dynamic/create'
-  | '/questions/dynamic/view'
-  | '/questions/dynamic/'
+  to: '/' | '/questions/dynamic/create' | '/questions/dynamic'
+  id: '__root__' | '/' | '/questions/dynamic/create' | '/questions/dynamic/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   QuestionsDynamicCreateRoute: typeof QuestionsDynamicCreateRoute
-  QuestionsDynamicViewRoute: typeof QuestionsDynamicViewRoute
   QuestionsDynamicIndexRoute: typeof QuestionsDynamicIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   QuestionsDynamicCreateRoute: QuestionsDynamicCreateRoute,
-  QuestionsDynamicViewRoute: QuestionsDynamicViewRoute,
   QuestionsDynamicIndexRoute: QuestionsDynamicIndexRoute,
 }
 
@@ -149,7 +117,6 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/questions/dynamic/create",
-        "/questions/dynamic/view",
         "/questions/dynamic/"
       ]
     },
@@ -158,9 +125,6 @@ export const routeTree = rootRoute
     },
     "/questions/dynamic/create": {
       "filePath": "questions/dynamic/create.tsx"
-    },
-    "/questions/dynamic/view": {
-      "filePath": "questions/dynamic/view.tsx"
     },
     "/questions/dynamic/": {
       "filePath": "questions/dynamic/index.tsx"

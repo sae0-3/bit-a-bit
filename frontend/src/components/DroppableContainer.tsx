@@ -22,9 +22,7 @@ export const DroppableContainer = ({
       ref={setNodeRef}
       className={`
         ${className ?? ''}
-        relative
-        min-h-[50px] p-4
-        ${isOver ? 'bg-secondary-gray' : ''}
+        ${isOver ? 'shadow-2xl shadow-primary-dark/40' : ''}
       `}
     >
       {renderComponent({ isOver })}
