@@ -11,11 +11,25 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as RegisterImport } from './routes/register'
+import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
 import { Route as QuestionsDynamicIndexImport } from './routes/questions/dynamic/index'
 import { Route as QuestionsDynamicCreateImport } from './routes/questions/dynamic/create'
 
 // Create/Update Routes
+
+const RegisterRoute = RegisterImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -46,6 +60,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterImport
+      parentRoute: typeof rootRoute
+    }
     '/questions/dynamic/create': {
       id: '/questions/dynamic/create'
       path: '/questions/dynamic/create'
@@ -67,12 +95,16 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/questions/dynamic/create': typeof QuestionsDynamicCreateRoute
   '/questions/dynamic': typeof QuestionsDynamicIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/questions/dynamic/create': typeof QuestionsDynamicCreateRoute
   '/questions/dynamic': typeof QuestionsDynamicIndexRoute
 }
@@ -80,27 +112,49 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/questions/dynamic/create': typeof QuestionsDynamicCreateRoute
   '/questions/dynamic/': typeof QuestionsDynamicIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/questions/dynamic/create' | '/questions/dynamic'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/questions/dynamic/create'
+    | '/questions/dynamic'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/questions/dynamic/create' | '/questions/dynamic'
-  id: '__root__' | '/' | '/questions/dynamic/create' | '/questions/dynamic/'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/questions/dynamic/create'
+    | '/questions/dynamic'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/register'
+    | '/questions/dynamic/create'
+    | '/questions/dynamic/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
   QuestionsDynamicCreateRoute: typeof QuestionsDynamicCreateRoute
   QuestionsDynamicIndexRoute: typeof QuestionsDynamicIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
   QuestionsDynamicCreateRoute: QuestionsDynamicCreateRoute,
   QuestionsDynamicIndexRoute: QuestionsDynamicIndexRoute,
 }
@@ -116,12 +170,20 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/login",
+        "/register",
         "/questions/dynamic/create",
         "/questions/dynamic/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/login": {
+      "filePath": "login.tsx"
+    },
+    "/register": {
+      "filePath": "register.tsx"
     },
     "/questions/dynamic/create": {
       "filePath": "questions/dynamic/create.tsx"

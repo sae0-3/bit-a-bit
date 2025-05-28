@@ -1,8 +1,12 @@
-import React from 'react'
+import { createFileRoute } from '@tanstack/react-router'
 
-export default function Login() {
+export const Route = createFileRoute('/login')({
+  component: LoginComponent,
+})
+
+function LoginComponent() {
   return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
         <form>
