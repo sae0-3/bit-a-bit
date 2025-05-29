@@ -1,7 +1,7 @@
 import { arrayMove } from '@dnd-kit/sortable'
 import { create } from 'zustand'
 
-import { Answer, Option } from '../types/form-question'
+import { Answer, Option, predefinedOption } from '../types/form-question'
 
 interface QuestionFormStore {
   title: string
@@ -9,6 +9,10 @@ interface QuestionFormStore {
   images: string[]
   options: Option[]
   answers: Answer[]
+  predefinedOptions: predefinedOption[]
+  initialNumber: string[]
+  resultNumber: string[]
+  motionNumber: string[]
 
   setTitle: (title: string) => void
   setDescription: (description: string) => void
@@ -24,7 +28,11 @@ interface QuestionFormStore {
   removeAnswer: (id: string) => void
 
   resetForm: () => void
-  getOptionById: (id: string) => Option | undefined
+  getOptionById: (id: string) => predefinedOption | undefined
+
+  setInitialNumber: (number: string[]) => void
+  setResultNumber: (number: string[]) => void
+  setMotionNumber: (number: string[]) => void
 }
 
 export const useQuestionFormStore = create<QuestionFormStore>((set, get) => ({
@@ -33,6 +41,14 @@ export const useQuestionFormStore = create<QuestionFormStore>((set, get) => ({
   images: [],
   options: [],
   answers: [],
+  predefinedOptions: [
+    { id: '1', value: 'Ultimo a la izquierda', type: 'left' },
+    { id: '2', value: 'Ultimo a la derecha', type: 'right' },
+    { id: '3', value: 'Simetría', type: 'mirror' }
+  ],
+  initialNumber: [],
+  resultNumber: [],
+  motionNumber: [],
 
   setTitle: (title) => set({ title }),
 
@@ -102,5 +118,17 @@ export const useQuestionFormStore = create<QuestionFormStore>((set, get) => ({
     answers: [],
   }),
 
-  getOptionById: (id) => get().options.find(opt => opt.id === id)
+  getOptionById: (id) => get().predefinedOptions.find(opt => opt.id === id),
+
+  setInitialNumber: (number: string[]) => set((state) => ({
+    initialNumber: number.length > 0 ? number : state.initialNumber
+  })),
+
+  setResultNumber: (number: string[]) => set((state) => ({
+    resultNumber: number.length > 0 ? number : state.resultNumber
+  })),
+
+  setMotionNumber: (number: string[]) => set((state) => ({
+    motionNumber: number.length > 0 ? number : state.motionNumber
+  })),
 }))

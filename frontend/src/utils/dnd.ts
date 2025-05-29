@@ -1,4 +1,6 @@
-import type { DragEndEvent } from '@dnd-kit/core'
+import {
+  DragEndEvent,
+} from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 
 export function handleReorder<T extends { id: string } | string>(

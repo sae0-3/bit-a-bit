@@ -1,31 +1,30 @@
 import {
   DndContext,
-  DragEndEvent,
   DragOverlay,
-  DragStartEvent,
   pointerWithin,
 } from '@dnd-kit/core'
 import { useState } from 'react'
 
 import { useSensors } from '../hooks/useSensors'
 import { useQuestionFormStore } from '../stores/question-form.store'
-import { Option } from '../types/form-question'
-import { handleReorder } from '../utils/dnd'
+import { predefinedOption } from '../types/form-question'
 import { DroppableContainer } from './DroppableContainer'
 import { SortableListContainer } from './SortableListContainer'
+import { handleDragEnd, handleDragStart } from '../utils/dndHandles'
+import { applyNumberOperation } from '../utils/optionFunction'
 
 type AddResponseModalProps = {
   onClose: () => void
 }
 
 export const AddResponseModal: React.FC<AddResponseModalProps> = ({ onClose }) => {
-  const { getOptionById, options, addAnswer } = useQuestionFormStore()
+  const { getOptionById, addAnswer, predefinedOptions, initialNumber, setResultNumber } = useQuestionFormStore()
 
   const [responseName, setResponseName] = useState('')
   const [error, setError] = useState<string | null>(null)
-  const [listOptions, setListOptions] = useState<Option[]>(options)
-  const [listAnswer, setListAnswer] = useState<Option[]>([])
-  const [activeOpt, setActiveOpt] = useState<Option | null>(null)
+  const [listOptions, setListOptions] = useState<predefinedOption[]>(predefinedOptions)
+  const [listAnswer, setListAnswer] = useState<predefinedOption[]>([] as predefinedOption[])
+  const [activeOpt, setActiveOpt] = useState<predefinedOption | null>(null)
 
   const sensors = useSensors()
 
@@ -44,43 +43,14 @@ export const AddResponseModal: React.FC<AddResponseModalProps> = ({ onClose }) =
       options: listAnswer,
     })
 
-    onClose()
-  }
-
-  const handleDragStart = (event: DragStartEvent) => {
-    const opt = getOptionById(String(event.active.id))
-    setActiveOpt(opt ?? null)
-  }
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
-    if (!over) return
-
-    const activeId = String(active.id)
-    const overId = String(over.id)
-
-    if (overId === 'options-list' || overId === 'answer-list') {
-      const fromOptions = listOptions.some(o => o.id === activeId)
-      const fromAnswer = listAnswer.some(o => o.id === activeId)
-
-      if (fromOptions && overId === 'answer-list') {
-        const item = listOptions.find(o => o.id === activeId)!
-        setListOptions(prev => prev.filter(o => o.id !== activeId))
-        setListAnswer(prev => [...prev, item])
-      } else if (fromAnswer && overId === 'options-list') {
-        const item = listAnswer.find(o => o.id === activeId)!
-        setListAnswer(prev => prev.filter(o => o.id !== activeId))
-        setListOptions(prev => [...prev, item])
-      }
-    } else {
-      if (listOptions.some(o => o.id === activeId)) {
-        handleReorder<Option>(event, listOptions, setListOptions)
-      } else {
-        handleReorder<Option>(event, listAnswer, setListAnswer)
-      }
+    let numberResponse = initialNumber
+    for (let i = 0; i < listAnswer.length; i++) {
+      numberResponse = applyNumberOperation(
+        numberResponse,
+        listAnswer[i],
+      )
     }
-
-    setActiveOpt(null)
+    setResultNumber(numberResponse)
   }
 
   return (
@@ -107,8 +77,24 @@ export const AddResponseModal: React.FC<AddResponseModalProps> = ({ onClose }) =
           <DndContext
             sensors={sensors}
             collisionDetection={pointerWithin}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
+            onDragStart={(event) =>
+              handleDragStart({
+                event,
+                setActiveOpt,
+                getOptionById,
+              })
+            }
+            onDragEnd={(event) =>
+              handleDragEnd({
+                event,
+                listOptions,
+                listAnswer,
+                setListAnswer,
+                setListOptions,
+                setActiveOpt,
+                staticOptions: true,
+              })
+            }
           >
             <div className="flex flex-col gap-8 lg:flex-row">
               <div className="w-full flex flex-col items-center justify-center gap-4 flex-1">

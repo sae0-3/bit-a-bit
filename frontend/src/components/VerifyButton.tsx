@@ -1,27 +1,24 @@
 import { LuShieldCheck } from 'react-icons/lu'
 
-import { useQuestionFormStore } from '../stores/question-form.store'
-import { Answer, Option } from '../types/form-question'
+import { verifyResponseByResults } from '../utils/validation'
+import { predefinedOption } from '../types/form-question'
+import { applyNumberOperation } from '../utils/optionFunction'
 
 type VerifyButtonProps = {
-  answer: Option[]
+  listAnswer: predefinedOption[]
+  objetive: string[]
+  initial: string[]
 }
 
 export const VerifyButton = (props: VerifyButtonProps) => {
-  const { answers } = useQuestionFormStore()
-
-  const isAnswerCorrect = (selected: Option[], correctAnswers: Answer[]): boolean => {
-    return correctAnswers.some(answer => {
-      const correctOptions = answer.options
-
-      if (selected.length !== correctOptions.length) return false
-
-      return selected.every((opt, index) => opt.id === correctOptions[index].id)
-    })
-  }
 
   const handleVerify = () => {
-    const correct = isAnswerCorrect(props.answer, answers)
+    let answerNumber: string[] = props.initial;
+    props.listAnswer.forEach((opt) => {
+      answerNumber = applyNumberOperation(answerNumber, opt)
+    })
+
+    const correct = verifyResponseByResults(answerNumber, props.objetive)
     alert(correct ? 'Respuesta correcta' : 'Respuesta incorrecta')
   }
 
