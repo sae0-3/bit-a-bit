@@ -4,7 +4,6 @@ import { useQuestionFormStore } from '../stores/question-form.store'
 import { AddResponse } from './AddResponse'
 import { DescriptionEditor } from './DescriptionEditor'
 import { DropzoneImagesUpload } from './DropzoneImagesUpload'
-import { Options } from './Options'
 import { AddNumberGame } from './AddNumberGame'
 
 export const TeacherView = () => {
@@ -46,9 +45,6 @@ export const TeacherView = () => {
         <div className="w-full lg:w-1/2">
           <AddNumberGame />
         </div>
-        {/* <div className="w-full lg:w-1/2">
-          <Options />
-        </div> */}
         <div className="w-full lg:w-1/2">
           <AddResponse />
         </div>

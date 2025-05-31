@@ -15,7 +15,7 @@ export const StudentView = () => {
   return (
     <div className="w-full flex flex-col items-center gap-4 py-4">
       <div className="w-10/12">
-        <NumberCards number={initialNumber} />
+        <NumberCards number={initialNumber} answer={answer} />
       </div>
 
       <div className="w-10/12">

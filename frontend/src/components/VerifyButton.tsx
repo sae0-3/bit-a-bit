@@ -2,7 +2,7 @@ import { LuShieldCheck } from 'react-icons/lu'
 
 import { verifyResponseByResults } from '../utils/validation'
 import { predefinedOption } from '../types/form-question'
-import { applyNumberOperation } from '../utils/optionFunction'
+import { applyNumberOperation } from '../utils/numberUtils'
 
 type VerifyButtonProps = {
   listAnswer: predefinedOption[]

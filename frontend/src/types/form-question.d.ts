@@ -5,7 +5,7 @@ export interface Option {
 
 export interface predefinedOption {
   id: string
-  value: 'Ultimo a la izquierda' | 'Ultimo a la derecha' | 'Simetría'
+  value: 'Rotar a la izquierda' | 'Rotar a la derecha' | 'Simetría'
   type: 'left' | 'right' | 'mirror'
 }
 

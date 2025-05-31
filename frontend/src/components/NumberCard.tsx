@@ -1,6 +1,5 @@
-
 type NumberCardProps = {
-  number: string;
+  number: string
 }
 
 export const NumberCard = ({ number }: NumberCardProps) => {

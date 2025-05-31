@@ -42,8 +42,8 @@ export const useQuestionFormStore = create<QuestionFormStore>((set, get) => ({
   options: [],
   answers: [],
   predefinedOptions: [
-    { id: '1', value: 'Ultimo a la izquierda', type: 'left' },
-    { id: '2', value: 'Ultimo a la derecha', type: 'right' },
+    { id: '1', value: 'Rotar a la izquierda', type: 'left' },
+    { id: '2', value: 'Rotar a la derecha', type: 'right' },
     { id: '3', value: 'Simetría', type: 'mirror' }
   ],
   initialNumber: [],

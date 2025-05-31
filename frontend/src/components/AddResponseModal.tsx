@@ -11,7 +11,7 @@ import { predefinedOption } from '../types/form-question'
 import { DroppableContainer } from './DroppableContainer'
 import { SortableListContainer } from './SortableListContainer'
 import { handleDragEnd, handleDragStart } from '../utils/dndHandles'
-import { applyNumberOperation } from '../utils/optionFunction'
+import { applyNumberOperation } from '../utils/numberUtils'
 
 type AddResponseModalProps = {
   onClose: () => void
