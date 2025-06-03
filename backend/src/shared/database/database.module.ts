@@ -22,7 +22,7 @@ export class DatabaseModule {
               'postgresql://postgres:1234@localhost:5432/questeditor',
             ),
             entities: [User, Question, QuestionPattern, ValidSolution, Pattern],
-            synchronize: true,
+            synchronize: false,
             logging: true,
             ssl:
               configService.get('NODE_ENV') === 'production'
