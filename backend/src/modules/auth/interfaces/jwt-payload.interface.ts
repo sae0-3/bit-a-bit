@@ -3,3 +3,9 @@ export interface JwtPayload {
   email: string;
   role: 'admin' | 'professor';
 }
+
+export interface RequestUser {
+  id: string;
+  email: string;
+  role: string;
+}
