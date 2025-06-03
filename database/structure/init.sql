@@ -20,12 +20,13 @@ CREATE TABLE questions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
   description TEXT,
-  initial_sequence TEXT NOT NULL,
-  created_by UUID NOT NULL REFERENCES users(id),
-  min_age INTEGER,
-  max_age INTEGER,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  initial_sequence JSONB NOT NULL,
+  created_by UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  min_age INTEGER CHECK (min_age >= 4),
+  max_age INTEGER CHECK (max_age >= 4),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT age_range CHECK (max_age IS NULL OR min_age IS NULL OR max_age >= min_age)
 );
 
 CREATE TABLE question_patterns (
@@ -36,10 +37,12 @@ CREATE TABLE question_patterns (
 
 CREATE TABLE valid_solutions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  question_id UUID REFERENCES questions(id) ON DELETE CASCADE,
+  question_id UUID NOT NULL REFERENCES questions(id) ON DELETE CASCADE,
   path JSONB NOT NULL,
-  final_sequence TEXT NOT NULL,
-  is_optimal BOOLEAN DEFAULT FALSE
+  final_sequence JSONB NOT NULL,
+  is_optimal BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 
@@ -53,6 +56,11 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_questions_updated_at
 BEFORE UPDATE ON questions
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER trigger_valid_solutions_updated_at
+BEFORE UPDATE ON valid_solutions
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
