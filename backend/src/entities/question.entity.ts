@@ -24,9 +24,6 @@ export class Question {
   @Column()
   initial_sequence: string;
 
-  @Column({ default: 'final_sequence' })
-  validation_mode: 'final_sequence' | 'exact_path';
-
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })
   created_by: User;
