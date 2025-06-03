@@ -34,4 +34,9 @@ export class UpdateQuestionDto {
   @IsInt({ message: 'La edad máxima debe ser un número entero' })
   @Min(4, { message: 'La edad máxima debe ser al menos 4' })
   max_age?: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true, message: 'Cada ID de patrón debe ser un número entero' })
+  pattern_ids?: number[];
 }

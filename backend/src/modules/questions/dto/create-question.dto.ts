@@ -32,4 +32,10 @@ export class CreateQuestionDto {
   @IsInt({ message: 'La edad máxima debe ser un número entero' })
   @Min(4, { message: 'La edad máxima debe ser al menos 4' })
   max_age?: number;
+
+  @IsArray()
+  @IsInt({ each: true, message: 'Cada ID de patrón debe ser un número entero' })
+  @ArrayNotEmpty({ message: 'Debes especificar al menos un patrón' })
+  @IsOptional()
+  pattern_ids?: number[];
 }

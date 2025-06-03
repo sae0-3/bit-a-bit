@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { Pattern } from '../../entities/pattern.entity';
 
@@ -45,5 +45,20 @@ export class PatternsService {
 
     Object.assign(pattern, updateData);
     return await this.patternRepo.save(pattern);
+  }
+
+  async findByIds(ids: number[]): Promise<Pattern[]> {
+    const patterns = await this.patternRepo.findBy({ id: In(ids) });
+
+    if (patterns.length !== ids.length) {
+      const foundIds = patterns.map((p) => p.id);
+      const missingIds = ids.filter((id) => !foundIds.includes(id));
+
+      throw new NotFoundException(
+        `Los siguientes IDs de patrón no fueron encontrados: ${missingIds.join(', ')}`,
+      );
+    }
+
+    return patterns;
   }
 }
