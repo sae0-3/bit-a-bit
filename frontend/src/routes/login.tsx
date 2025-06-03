@@ -2,19 +2,22 @@ import { useForm } from '@tanstack/react-form'
 import { createFileRoute } from '@tanstack/react-router'
 
 import { loginSchema } from '../dtos/login-dto'
+import { useLogin } from '../hooks/useAuth'
 
 export const Route = createFileRoute('/login')({
   component: LoginComponent,
 })
 
 function LoginComponent() {
+  const { mutate: login, isPending, isError } = useLogin()
+
   const form = useForm({
     defaultValues: {
       email: '',
       password: '',
     },
     onSubmit: async ({ value }) => {
-      console.log('Iniciando Sesión...', value)
+      login(value)
     },
     validators: {
       onChange: loginSchema,
@@ -84,11 +87,16 @@ function LoginComponent() {
             />
           </div>
 
+          {isError && (
+            <p className="text-red-500 mb-4 text-center">Credenciales inválidas</p>
+          )}
+
           <button
             type="submit"
-            className="w-full bg-primary-dark text-white py-2 hover:bg-blue-700 hover:cursor-pointer transition rounded-md"
+            disabled={isPending}
+            className="w-full bg-primary-dark text-white py-2 hover:bg-blue-700 hover:cursor-pointer transition rounded-md disabled:opacity-70"
           >
-            Ingresar
+            {isPending ? 'Cargando...' : 'Ingresar'}
           </button>
         </form>
       </div>
