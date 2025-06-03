@@ -21,10 +21,10 @@ export class Question {
   @Column({ nullable: true })
   description: string;
 
-  @Column()
-  initial_sequence: string;
+  @Column({ type: 'jsonb' })
+  initial_sequence: Array<number | string>;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'created_by' })
   created_by: User;
 
