@@ -21,7 +21,6 @@ CREATE TABLE questions (
   title TEXT NOT NULL,
   description TEXT,
   initial_sequence TEXT NOT NULL,
-  validation_mode TEXT NOT NULL CHECK (validation_mode IN ('final_sequence', 'exact_path')) DEFAULT 'final_sequence',
   created_by UUID NOT NULL REFERENCES users(id),
   min_age INTEGER,
   max_age INTEGER,
