@@ -9,7 +9,7 @@ export const Header = () => {
           Question Editor
         </Link>
 
-        <Link to="/" disabled >
+        <Link to="/login"  >
           <FaUserCircle size={32} />
         </Link>
       </div>

@@ -26,6 +26,7 @@ function IndexComponent() {
           <FaQuestion size="50" color="#fff" />
           <span className="text-white text-center">Preguntas Estáticas</span>
         </Link>
+        
       </div>
     </section>
   )
