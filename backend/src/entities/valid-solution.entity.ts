@@ -20,7 +20,7 @@ export class ValidSolution {
   question: Question;
 
   @Column({ type: 'jsonb' })
-  path: object;
+  path: Array<{ id: number; code: string }>;
 
   @Column({ type: 'jsonb' })
   final_sequence: Array<number | string>;
