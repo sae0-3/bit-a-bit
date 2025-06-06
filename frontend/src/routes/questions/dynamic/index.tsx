@@ -9,7 +9,7 @@ export const Route = createFileRoute('/questions/dynamic/')({
 })
 
 function IndexQuestionComponent() {
-  const { data, isError, isLoading } = useGetQuestions()
+  const { data: questions, isError, isLoading } = useGetQuestions()
 
   if (isError) {
     return (
@@ -34,11 +34,11 @@ function IndexQuestionComponent() {
         </Link>
       </div>
 
-      {!!data && data.length === 0 ? (
+      {!Array.isArray(questions) || questions.length === 0 ? (
         <span className="text-gray-500 text-center italic">No existen preguntas creadas</span>
       ) : (
         <div className="w-10/12 flex flex-col gap-4">
-          {data?.map((question) => (
+          {questions.map(question => (
             <CardQuestion
               key={question.id}
               id={question.id}
