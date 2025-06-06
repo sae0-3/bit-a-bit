@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { ValidSolution } from 'src/entities/valid-solution.entity';
+import { PatternFunctionsService } from '../patterns/pattern-function.service';
 import { QuestionsService } from '../questions/questions.service';
 import { CreateSolutionDto } from './dto/create-solution.dto';
 import { UpdateSolutionDto } from './dto/update-solution.dto';
@@ -13,6 +18,7 @@ export class SolutionsService {
     @InjectRepository(ValidSolution)
     private readonly validSolutionRepo: Repository<ValidSolution>,
     private readonly questionsService: QuestionsService,
+    private readonly patternFunctionsService: PatternFunctionsService,
   ) {}
 
   async findAllByQuestionId(userId: string, questionId: string) {
@@ -28,8 +34,13 @@ export class SolutionsService {
   }
 
   async create(userId: string, dto: CreateSolutionDto) {
-    const { question_id, path, final_sequence } = dto;
+    const { question_id, path } = dto;
     const question = await this.questionsService.findById(userId, question_id);
+
+    const final_sequence = this.transformSequence(
+      question.initial_sequence,
+      path,
+    );
 
     const solution = this.validSolutionRepo.create({
       question,
@@ -42,7 +53,20 @@ export class SolutionsService {
 
   async update(userId: string, solutionId: string, dto: UpdateSolutionDto) {
     const solution = await this.assertOwnership(userId, solutionId);
-    Object.assign(solution, dto);
+    if (!dto.path) return solution;
+
+    const question = await this.questionsService.findById(
+      userId,
+      solution.question.id,
+    );
+
+    const final_sequence = this.transformSequence(
+      question.initial_sequence,
+      dto.path,
+    );
+
+    solution.path = dto.path;
+    solution.final_sequence = final_sequence;
 
     return this.validSolutionRepo.save(solution);
   }
@@ -71,5 +95,23 @@ export class SolutionsService {
     }
 
     return solution;
+  }
+
+  private transformSequence(
+    sequence: Array<string | number>,
+    path: Array<string>,
+  ): Array<string | number> {
+    let baseSequence = [...sequence];
+
+    for (const code of path) {
+      const fn = this.patternFunctionsService.getFunctionByCode(code);
+      if (!fn) {
+        throw new BadRequestException(`Patrón desconocido: ${code}`);
+      }
+
+      baseSequence = fn(baseSequence);
+    }
+
+    return baseSequence;
   }
 }

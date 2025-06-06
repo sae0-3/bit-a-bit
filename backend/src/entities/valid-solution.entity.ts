@@ -20,13 +20,10 @@ export class ValidSolution {
   question: Question;
 
   @Column({ type: 'jsonb' })
-  path: Array<{ id: number; code: string }>;
+  path: Array<string>;
 
   @Column({ type: 'jsonb' })
   final_sequence: Array<number | string>;
-
-  @Column({ default: false })
-  is_optimal: boolean;
 
   @CreateDateColumn({ type: 'timestamptz' })
   created_at: Date;
