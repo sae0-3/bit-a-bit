@@ -40,7 +40,6 @@ CREATE TABLE valid_solutions (
   question_id UUID NOT NULL REFERENCES questions(id) ON DELETE CASCADE,
   path JSONB NOT NULL,
   final_sequence JSONB NOT NULL,
-  is_optimal BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
