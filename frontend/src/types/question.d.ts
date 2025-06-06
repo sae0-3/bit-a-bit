@@ -25,3 +25,14 @@ export interface QuestionResponse {
   created_at: string
   patterns: Array<PatternResponse>
 }
+
+export interface CreateQuestion {
+  title: string
+  description?: string | null
+  initial_sequence: Array<string | number>
+  min_age?: number | null
+  max_age?: number | null
+  pattern_ids?: Array<number>
+}
+
+export type UpdateQuestion = Partial<CreateQuestion>
