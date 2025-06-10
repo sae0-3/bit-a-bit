@@ -116,6 +116,9 @@ export const useQuestionFormStore = create<QuestionFormStore>((set, get) => ({
     images: [],
     options: [],
     answers: [],
+    initialNumber: [],
+    resultNumber: [],
+    motionNumber: [],
   }),
 
   getOptionById: (id) => get().predefinedOptions.find(opt => opt.id === id),
