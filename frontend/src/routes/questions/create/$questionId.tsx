@@ -1,15 +1,15 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
-import { CreateSolution } from '../../../../components/CreateSolution'
-import { ListSolutions } from '../../../../components/ListSolutions'
-import { NumberCards } from '../../../../components/NumberCards'
-import { SubmitSolution } from '../../../../components/SubmitSolution'
-import { useGetQuestionById } from '../../../../hooks/useQuestions'
-import { useTransformSequence } from '../../../../hooks/useSolutions'
-import { useSolutionStore } from '../../../../stores/solutions.store'
+import { CreateSolution } from '../../../components/CreateSolution'
+import { ListSolutions } from '../../../components/ListSolutions'
+import { NumberCards } from '../../../components/NumberCards'
+import { SubmitSolution } from '../../../components/SubmitSolution'
+import { useGetQuestionById } from '../../../hooks/useQuestions'
+import { useTransformSequence } from '../../../hooks/useSolutions'
+import { useSolutionStore } from '../../../stores/solutions.store'
 
-export const Route = createFileRoute('/questions/dynamic/create/$questionId')({
+export const Route = createFileRoute('/questions/create/$questionId')({
   component: CreateQuestionAddAnswersComponent,
 })
 

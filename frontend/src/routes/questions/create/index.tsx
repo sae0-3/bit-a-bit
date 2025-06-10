@@ -1,12 +1,12 @@
 import { createFileRoute, useCanGoBack, useRouter } from '@tanstack/react-router'
 
-import { AddNumberGame } from '../../../../components/AddNumberGame'
-import { DescriptionEditor } from '../../../../components/DescriptionEditor'
-import { DropzoneImagesUpload } from '../../../../components/DropzoneImagesUpload'
-import { useCreateQuestion } from '../../../../hooks/useQuestions'
-import { useQuestionFormStore } from '../../../../stores/question-form.store'
+import { AddNumberGame } from '../../../components/AddNumberGame'
+import { DescriptionEditor } from '../../../components/DescriptionEditor'
+import { DropzoneImagesUpload } from '../../../components/DropzoneImagesUpload'
+import { useCreateQuestion } from '../../../hooks/useQuestions'
+import { useQuestionFormStore } from '../../../stores/question-form.store'
 
-export const Route = createFileRoute('/questions/dynamic/create/')({
+export const Route = createFileRoute('/questions/create/')({
   component: CreateQuestionComponent,
 })
 
