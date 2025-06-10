@@ -16,19 +16,19 @@ export const Route = createFileRoute('/questions/dynamic/create/$questionId')({
 function CreateQuestionAddAnswersComponent() {
   const { questionId } = Route.useParams()
   const { data: question, isLoading, isError, isSuccess } = useGetQuestionById(questionId)
-  const { sequence, setSequence, answerCodes } = useSolutionStore()
+  const { finalSequence, setInitialSequence, setFinalSequence, answerCodes } = useSolutionStore()
   const { mutate: transform } = useTransformSequence()
 
   useEffect(() => {
     if (question)
-      setSequence(question.initial_sequence)
+      setInitialSequence(question.initial_sequence)
   }, [isSuccess, question])
 
   useEffect(() => {
     if (answerCodes.length > 0)
       transform()
     else if (question)
-      setSequence(question.initial_sequence)
+      setFinalSequence(question.initial_sequence)
   }, [answerCodes])
 
   if (isLoading) return (
@@ -42,7 +42,7 @@ function CreateQuestionAddAnswersComponent() {
   return (
     <section className="flex w-full flex-col justify-center items-center gap-5 py-4">
       <h1 className="font-bold text-2xl text-center">Agregar Respuestas</h1>
-      <NumberCards number={sequence} />
+      <NumberCards number={finalSequence} />
 
       <div className="w-10/12 flex flex-col gap-4">
         <div className="w-full flex flex-col gap-3">

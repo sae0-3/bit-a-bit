@@ -2,8 +2,9 @@ import { create } from 'zustand'
 
 import { SolutionState } from '../types/solutions'
 
-export const useSolutionStore = create<SolutionState>((set) => ({
-  sequence: [],
+export const useSolutionStore = create<SolutionState>((set, get) => ({
+  initialSequence: [],
+  finalSequence: [],
   answerList: [],
   answerCodes: [],
 
@@ -48,10 +49,15 @@ export const useSolutionStore = create<SolutionState>((set) => ({
     set({
       answerList: [],
       answerCodes: [],
+      finalSequence: get().initialSequence,
     })
   },
 
-  setSequence(sequence) {
-    set({ sequence })
+  setInitialSequence: (sequence) => {
+    set({ initialSequence: sequence, finalSequence: sequence })
+  },
+
+  setFinalSequence: (sequence) => {
+    set({ finalSequence: sequence })
   },
 }))

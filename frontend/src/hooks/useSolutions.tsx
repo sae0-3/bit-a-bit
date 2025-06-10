@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 
 import api from '../api/axios'
 import { queryClient } from '../lib/queryClient'
@@ -8,7 +9,6 @@ import {
   CreateSolutionResponse,
   SolutionsResponse,
 } from '../types/solutions'
-import { AxiosError } from 'axios'
 
 export const useSolutionValidation = () => {
   const { answerList } = useSolutionStore()
@@ -38,9 +38,9 @@ export const useGetSolutionsFromQuestion = (questionId: string) => {
   })
 }
 
-export const useCreateSolution = (initial_sequence: string[]) => {
+export const useCreateSolution = () => {
   const { user } = useAuthStore()
-  const { answerList, clearAnswer, setSequence } = useSolutionStore()
+  const { answerList, clearAnswer } = useSolutionStore()
   const patterns = answerList.map(answer => answer.id.split('-')[0])
 
   return useMutation<CreateSolutionResponse, AxiosError, string>({
@@ -56,7 +56,6 @@ export const useCreateSolution = (initial_sequence: string[]) => {
       queryClient.invalidateQueries({
         queryKey: ['solutions', data.question.id, user?.id]
       })
-      setSequence(initial_sequence)
       clearAnswer()
     },
 
@@ -97,16 +96,19 @@ export const useDeleteSolutionById = (questionId: string) => {
 }
 
 export const useTransformSequence = () => {
-  const { sequence, setSequence, answerCodes } = useSolutionStore()
+  const { initialSequence, setFinalSequence, answerCodes } = useSolutionStore()
 
   return useMutation<Array<string>, AxiosError, void>({
     mutationFn: async () => {
-      const res = await api.post('/patterns/transform', { sequence, path: answerCodes })
+      const res = await api.post('/patterns/transform', {
+        sequence: initialSequence,
+        path: answerCodes
+      })
       return res.data
     },
 
     onSuccess: (data) => {
-      setSequence(data)
+      setFinalSequence(data)
     },
 
     onError: console.error,
