@@ -3,6 +3,7 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsInt,
+  IsNotEmpty,
   IsOptional,
   IsString,
   Min,
@@ -10,6 +11,7 @@ import {
 
 export class CreateQuestionDto {
   @IsString({ message: 'El título debe ser una cadena de texto válida' })
+  @IsNotEmpty({ message: 'El titulo no puede estar vacio' })
   title: string;
 
   @IsOptional()
