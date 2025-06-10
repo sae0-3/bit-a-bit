@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -37,7 +33,7 @@ export class SolutionsService {
     const { question_id, path } = dto;
     const question = await this.questionsService.findById(userId, question_id);
 
-    const final_sequence = this.transformSequence(
+    const final_sequence = this.patternFunctionsService.transformSequence(
       question.initial_sequence,
       path,
     );
@@ -60,7 +56,7 @@ export class SolutionsService {
       solution.question.id,
     );
 
-    const final_sequence = this.transformSequence(
+    const final_sequence = this.patternFunctionsService.transformSequence(
       question.initial_sequence,
       dto.path,
     );
@@ -95,23 +91,5 @@ export class SolutionsService {
     }
 
     return solution;
-  }
-
-  private transformSequence(
-    sequence: Array<string | number>,
-    path: Array<string>,
-  ): Array<string | number> {
-    let baseSequence = [...sequence];
-
-    for (const code of path) {
-      const fn = this.patternFunctionsService.getFunctionByCode(code);
-      if (!fn) {
-        throw new BadRequestException(`Patrón desconocido: ${code}`);
-      }
-
-      baseSequence = fn(baseSequence);
-    }
-
-    return baseSequence;
   }
 }

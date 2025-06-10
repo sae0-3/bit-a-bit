@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class PatternFunctionsService {
@@ -99,5 +99,23 @@ export class PatternFunctionsService {
 
   getAvailableCodes(): string[] {
     return Object.keys(this.patterns);
+  }
+
+  transformSequence(
+    sequence: Array<string | number>,
+    path: Array<string>,
+  ): Array<string | number> {
+    let baseSequence = [...sequence];
+
+    for (const code of path) {
+      const fn = this.getFunctionByCode(code);
+      if (!fn) {
+        throw new BadRequestException(`Patrón desconocido: ${code}`);
+      }
+
+      baseSequence = fn(baseSequence);
+    }
+
+    return baseSequence;
   }
 }
