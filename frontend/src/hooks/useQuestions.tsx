@@ -54,7 +54,7 @@ export const useCreateQuestion = () => {
         queryKey: ['questions', user?.id]
       })
       navigate({
-        to: '/questions/dynamic/create/$questionId',
+        to: '/questions/create/$questionId',
         params: { questionId: data.id }
       })
       resetForm()

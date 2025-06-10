@@ -56,7 +56,7 @@ function CreateQuestionAddAnswersComponent() {
         </div>
 
         <Link
-          to="/questions/dynamic"
+          to="/"
           className="ml-auto bg-primary-dark text-white py-2 px-4 rounded-lg flex items-center justify-center hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Terminar
