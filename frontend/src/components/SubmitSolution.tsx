@@ -1,7 +1,12 @@
 import { useCreateSolution, useSolutionValidation } from '../hooks/useSolutions'
 import { useSolutionStore } from '../stores/solutions.store'
 
-export const SubmitSolution = ({ questionId }: { questionId: string }) => {
+interface SubmitSolutionProps {
+  questionId: string
+  initial_sequence: Array<string>
+}
+
+export const SubmitSolution = (props: SubmitSolutionProps) => {
   const { clearAnswer } = useSolutionStore()
   const {
     isValidAnswer,
@@ -9,11 +14,11 @@ export const SubmitSolution = ({ questionId }: { questionId: string }) => {
     canSubmit,
     validationMessage
   } = useSolutionValidation()
-  const { mutate: create, isPending } = useCreateSolution()
+  const { mutate: create, isPending } = useCreateSolution(props.initial_sequence)
 
   const handleCreateSolution = () => {
     if (!canSubmit) return
-    create(questionId)
+    create(props.questionId)
   }
 
   return (

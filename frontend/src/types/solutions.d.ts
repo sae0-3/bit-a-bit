@@ -6,8 +6,11 @@ export interface Item {
 }
 
 export interface SolutionState {
+  sequence: Array<string>
   answerList: Item[]
+  answerCodes: Array<string>
 
+  setSequence: (sequence: Array<string>) => void
   addToAnswer: (item: Item) => void
   removeFromAnswer: (itemId: string) => void
   reorderAnswer: (oldIndex: number, newIndex: number) => void

@@ -1,10 +1,13 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { useEffect } from 'react'
 
 import { CreateSolution } from '../../../../components/CreateSolution'
 import { ListSolutions } from '../../../../components/ListSolutions'
 import { NumberCards } from '../../../../components/NumberCards'
 import { SubmitSolution } from '../../../../components/SubmitSolution'
 import { useGetQuestionById } from '../../../../hooks/useQuestions'
+import { useTransformSequence } from '../../../../hooks/useSolutions'
+import { useSolutionStore } from '../../../../stores/solutions.store'
 
 export const Route = createFileRoute('/questions/dynamic/create/$questionId')({
   component: CreateQuestionAddAnswersComponent,
@@ -12,7 +15,19 @@ export const Route = createFileRoute('/questions/dynamic/create/$questionId')({
 
 function CreateQuestionAddAnswersComponent() {
   const { questionId } = Route.useParams()
-  const { data: question, isLoading, isError } = useGetQuestionById(questionId)
+  const { data: question, isLoading, isError, isSuccess } = useGetQuestionById(questionId)
+  const { sequence, setSequence, answerCodes } = useSolutionStore()
+  const { mutate: transform } = useTransformSequence()
+
+  useEffect(() => {
+    if (question)
+      setSequence(question.initial_sequence)
+  }, [isSuccess, question])
+
+  useEffect(() => {
+    if (answerCodes.length > 0)
+      transform()
+  }, [answerCodes])
 
   if (isLoading) return (
     <p>Cargando información de la pregunta...</p>
@@ -25,12 +40,12 @@ function CreateQuestionAddAnswersComponent() {
   return (
     <section className="flex w-full flex-col justify-center items-center gap-5 py-4">
       <h1 className="font-bold text-2xl text-center">Agregar Respuestas</h1>
-      <NumberCards number={question.initial_sequence} />
+      <NumberCards number={sequence} />
 
       <div className="w-10/12 flex flex-col gap-4">
         <div className="w-full flex flex-col gap-3">
           <CreateSolution />
-          <SubmitSolution questionId={questionId} />
+          <SubmitSolution questionId={questionId} initial_sequence={question.initial_sequence} />
         </div>
 
         <div className="w-full flex flex-col gap-2">

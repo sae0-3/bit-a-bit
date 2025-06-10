@@ -38,9 +38,9 @@ export const useGetSolutionsFromQuestion = (questionId: string) => {
   })
 }
 
-export const useCreateSolution = () => {
+export const useCreateSolution = (initial_sequence: string[]) => {
   const { user } = useAuthStore()
-  const { answerList, clearAnswer } = useSolutionStore()
+  const { answerList, clearAnswer, setSequence } = useSolutionStore()
   const patterns = answerList.map(answer => answer.id.split('-')[0])
 
   return useMutation<CreateSolutionResponse, AxiosError, string>({
@@ -56,6 +56,7 @@ export const useCreateSolution = () => {
       queryClient.invalidateQueries({
         queryKey: ['solutions', data.question.id, user?.id]
       })
+      setSequence(initial_sequence)
       clearAnswer()
     },
 
@@ -91,6 +92,23 @@ export const useDeleteSolutionById = (questionId: string) => {
         queryKey: ['solutions', questionId, user?.id]
       })
     },
+    onError: console.error,
+  })
+}
+
+export const useTransformSequence = () => {
+  const { sequence, setSequence, answerCodes } = useSolutionStore()
+
+  return useMutation<Array<string>, AxiosError, void>({
+    mutationFn: async () => {
+      const res = await api.post('/patterns/transform', { sequence, path: answerCodes })
+      return res.data
+    },
+
+    onSuccess: (data) => {
+      setSequence(data)
+    },
+
     onError: console.error,
   })
 }
