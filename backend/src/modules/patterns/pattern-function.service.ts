@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
+import { TransformSequenceDto } from './dto/transform.sequence.dto';
+
 @Injectable()
 export class PatternFunctionsService {
   private readonly patterns = {
@@ -101,10 +103,8 @@ export class PatternFunctionsService {
     return Object.keys(this.patterns);
   }
 
-  transformSequence(
-    sequence: Array<string | number>,
-    path: Array<string>,
-  ): Array<string | number> {
+  transformSequence(data: TransformSequenceDto): Array<string | number> {
+    const { sequence, path } = data;
     let baseSequence = [...sequence];
 
     for (const code of path) {

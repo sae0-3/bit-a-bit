@@ -5,18 +5,24 @@ import {
   Param,
   ParseIntPipe,
   Patch,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
 
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { TransformSequenceDto } from './dto/transform.sequence.dto';
 import { UpdatePatternDto } from './dto/update-pattern.dto';
+import { PatternFunctionsService } from './pattern-function.service';
 import { PatternsService } from './patterns.service';
 
 @Controller('patterns')
 @UseGuards(JwtAuthGuard)
 export class PatternsController {
-  constructor(private readonly patternsService: PatternsService) {}
+  constructor(
+    private readonly patternsService: PatternsService,
+    private readonly patternFunctions: PatternFunctionsService,
+  ) {}
 
   @Get()
   findAll(@Query('active') active?: string) {
@@ -40,5 +46,10 @@ export class PatternsController {
     @Body() updatePatternDto: UpdatePatternDto,
   ) {
     return this.patternsService.update(id, updatePatternDto);
+  }
+
+  @Post('transform')
+  transformSequence(@Body() body: TransformSequenceDto) {
+    return this.patternFunctions.transformSequence(body);
   }
 }

@@ -33,10 +33,10 @@ export class SolutionsService {
     const { question_id, path } = dto;
     const question = await this.questionsService.findById(userId, question_id);
 
-    const final_sequence = this.patternFunctionsService.transformSequence(
-      question.initial_sequence,
+    const final_sequence = this.patternFunctionsService.transformSequence({
+      sequence: question.initial_sequence,
       path,
-    );
+    });
 
     const solution = this.validSolutionRepo.create({
       question,
@@ -56,10 +56,10 @@ export class SolutionsService {
       solution.question.id,
     );
 
-    const final_sequence = this.patternFunctionsService.transformSequence(
-      question.initial_sequence,
-      dto.path,
-    );
+    const final_sequence = this.patternFunctionsService.transformSequence({
+      sequence: question.initial_sequence,
+      path: dto.path,
+    });
 
     solution.path = dto.path;
     solution.final_sequence = final_sequence;
