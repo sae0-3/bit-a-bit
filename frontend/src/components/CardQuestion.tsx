@@ -3,6 +3,8 @@ import { CiEdit } from 'react-icons/ci'
 import { GrView } from 'react-icons/gr'
 import { IoIosRemove } from 'react-icons/io'
 
+import { useDeleteQuestionById } from '../hooks/useQuestions'
+
 type CardQuestionProps = {
   id: string
   title: string
@@ -13,9 +15,7 @@ type CardQuestionProps = {
 }
 
 export const CardQuestion = (props: CardQuestionProps) => {
-  const handleRemoveQuestion = () => {
-    console.log("Eliminando pregunta")
-  }
+  const { mutate: remove, isPending } = useDeleteQuestionById(props.id)
 
   return (
     <div className="flex justify-between items-center gap-2 bg-primary-light p-1 rounde-lg shadow-md lg:p-4">
@@ -64,8 +64,9 @@ export const CardQuestion = (props: CardQuestionProps) => {
           <CiEdit className="text-white" size={24} />
         </Link>
 
-        <button onClick={handleRemoveQuestion}
-          className="bg-red-800 rounded-lg flex items-center justify-center p-2 hover:cursor-pointer"
+        <button onClick={() => remove()}
+          className="bg-red-800 rounded-lg flex items-center justify-center p-2 hover:cursor-pointer disabled:opacity-50"
+          disabled={isPending}
         >
           <IoIosRemove className="text-white" size={24} />
         </button>

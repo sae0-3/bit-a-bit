@@ -1,10 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 
 import api from '../api/axios'
 import { queryClient } from '../lib/queryClient'
 import { useAuthStore } from '../stores/auth.store'
+import { useQuestionFormStore } from '../stores/question-form.store'
 import {
-  CreateQuestion,
   QuestionResponse,
   UpdateQuestion,
 } from '../types/question'
@@ -35,17 +36,31 @@ export const useGetQuestionById = (id: string) => {
 
 export const useCreateQuestion = () => {
   const { user } = useAuthStore()
+  const { title, description, initialNumber, resetForm } = useQuestionFormStore()
+  const navigate = useNavigate()
 
-  return useMutation({
-    mutationFn: async (data: CreateQuestion) => {
-      const res = await api.post('/questions', data)
+  return useMutation<Omit<QuestionResponse, 'patterns'>, void>({
+    mutationFn: async () => {
+      const res = await api.post('/questions', {
+        title,
+        description,
+        initial_sequence: initialNumber,
+      })
       return res.data
     },
-    onSuccess: () => {
+
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ['questions', user?.id]
       })
+      navigate({
+        to: '/questions/dynamic/create/$questionId',
+        params: { questionId: data.id }
+      })
+      resetForm()
     },
+
+    onError: console.error,
   })
 }
 

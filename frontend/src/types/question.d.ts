@@ -18,7 +18,7 @@ export interface QuestionResponse {
   id: string
   title: string
   description: string | null
-  initial_sequence: Array<string | number>
+  initial_sequence: Array<string>
   min_age: number | null
   max_age: number | null
   updated_at: string
@@ -29,7 +29,7 @@ export interface QuestionResponse {
 export interface CreateQuestion {
   title: string
   description?: string | null
-  initial_sequence: Array<string | number>
+  initial_sequence: Array<string>
   min_age?: number | null
   max_age?: number | null
   pattern_ids?: Array<number>

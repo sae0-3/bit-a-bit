@@ -15,7 +15,8 @@ import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
 import { Route as QuestionsDynamicIndexImport } from './routes/questions/dynamic/index'
-import { Route as QuestionsDynamicCreateImport } from './routes/questions/dynamic/create'
+import { Route as QuestionsDynamicCreateIndexImport } from './routes/questions/dynamic/create/index'
+import { Route as QuestionsDynamicCreateQuestionIdImport } from './routes/questions/dynamic/create/$questionId'
 
 // Create/Update Routes
 
@@ -43,11 +44,19 @@ const QuestionsDynamicIndexRoute = QuestionsDynamicIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const QuestionsDynamicCreateRoute = QuestionsDynamicCreateImport.update({
-  id: '/questions/dynamic/create',
-  path: '/questions/dynamic/create',
-  getParentRoute: () => rootRoute,
-} as any)
+const QuestionsDynamicCreateIndexRoute =
+  QuestionsDynamicCreateIndexImport.update({
+    id: '/questions/dynamic/create/',
+    path: '/questions/dynamic/create/',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const QuestionsDynamicCreateQuestionIdRoute =
+  QuestionsDynamicCreateQuestionIdImport.update({
+    id: '/questions/dynamic/create/$questionId',
+    path: '/questions/dynamic/create/$questionId',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -74,18 +83,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
     }
-    '/questions/dynamic/create': {
-      id: '/questions/dynamic/create'
-      path: '/questions/dynamic/create'
-      fullPath: '/questions/dynamic/create'
-      preLoaderRoute: typeof QuestionsDynamicCreateImport
-      parentRoute: typeof rootRoute
-    }
     '/questions/dynamic/': {
       id: '/questions/dynamic/'
       path: '/questions/dynamic'
       fullPath: '/questions/dynamic'
       preLoaderRoute: typeof QuestionsDynamicIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/questions/dynamic/create/$questionId': {
+      id: '/questions/dynamic/create/$questionId'
+      path: '/questions/dynamic/create/$questionId'
+      fullPath: '/questions/dynamic/create/$questionId'
+      preLoaderRoute: typeof QuestionsDynamicCreateQuestionIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/questions/dynamic/create/': {
+      id: '/questions/dynamic/create/'
+      path: '/questions/dynamic/create'
+      fullPath: '/questions/dynamic/create'
+      preLoaderRoute: typeof QuestionsDynamicCreateIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -97,16 +113,18 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/questions/dynamic/create': typeof QuestionsDynamicCreateRoute
   '/questions/dynamic': typeof QuestionsDynamicIndexRoute
+  '/questions/dynamic/create/$questionId': typeof QuestionsDynamicCreateQuestionIdRoute
+  '/questions/dynamic/create': typeof QuestionsDynamicCreateIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/questions/dynamic/create': typeof QuestionsDynamicCreateRoute
   '/questions/dynamic': typeof QuestionsDynamicIndexRoute
+  '/questions/dynamic/create/$questionId': typeof QuestionsDynamicCreateQuestionIdRoute
+  '/questions/dynamic/create': typeof QuestionsDynamicCreateIndexRoute
 }
 
 export interface FileRoutesById {
@@ -114,8 +132,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/questions/dynamic/create': typeof QuestionsDynamicCreateRoute
   '/questions/dynamic/': typeof QuestionsDynamicIndexRoute
+  '/questions/dynamic/create/$questionId': typeof QuestionsDynamicCreateQuestionIdRoute
+  '/questions/dynamic/create/': typeof QuestionsDynamicCreateIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -124,22 +143,25 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
-    | '/questions/dynamic/create'
     | '/questions/dynamic'
+    | '/questions/dynamic/create/$questionId'
+    | '/questions/dynamic/create'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/register'
-    | '/questions/dynamic/create'
     | '/questions/dynamic'
+    | '/questions/dynamic/create/$questionId'
+    | '/questions/dynamic/create'
   id:
     | '__root__'
     | '/'
     | '/login'
     | '/register'
-    | '/questions/dynamic/create'
     | '/questions/dynamic/'
+    | '/questions/dynamic/create/$questionId'
+    | '/questions/dynamic/create/'
   fileRoutesById: FileRoutesById
 }
 
@@ -147,16 +169,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
-  QuestionsDynamicCreateRoute: typeof QuestionsDynamicCreateRoute
   QuestionsDynamicIndexRoute: typeof QuestionsDynamicIndexRoute
+  QuestionsDynamicCreateQuestionIdRoute: typeof QuestionsDynamicCreateQuestionIdRoute
+  QuestionsDynamicCreateIndexRoute: typeof QuestionsDynamicCreateIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
-  QuestionsDynamicCreateRoute: QuestionsDynamicCreateRoute,
   QuestionsDynamicIndexRoute: QuestionsDynamicIndexRoute,
+  QuestionsDynamicCreateQuestionIdRoute: QuestionsDynamicCreateQuestionIdRoute,
+  QuestionsDynamicCreateIndexRoute: QuestionsDynamicCreateIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -172,8 +196,9 @@ export const routeTree = rootRoute
         "/",
         "/login",
         "/register",
-        "/questions/dynamic/create",
-        "/questions/dynamic/"
+        "/questions/dynamic/",
+        "/questions/dynamic/create/$questionId",
+        "/questions/dynamic/create/"
       ]
     },
     "/": {
@@ -185,11 +210,14 @@ export const routeTree = rootRoute
     "/register": {
       "filePath": "register.tsx"
     },
-    "/questions/dynamic/create": {
-      "filePath": "questions/dynamic/create.tsx"
-    },
     "/questions/dynamic/": {
       "filePath": "questions/dynamic/index.tsx"
+    },
+    "/questions/dynamic/create/$questionId": {
+      "filePath": "questions/dynamic/create/$questionId.tsx"
+    },
+    "/questions/dynamic/create/": {
+      "filePath": "questions/dynamic/create/index.tsx"
     }
   }
 }
