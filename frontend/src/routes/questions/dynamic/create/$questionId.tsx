@@ -27,6 +27,8 @@ function CreateQuestionAddAnswersComponent() {
   useEffect(() => {
     if (answerCodes.length > 0)
       transform()
+    else if (question)
+      setSequence(question.initial_sequence)
   }, [answerCodes])
 
   if (isLoading) return (
