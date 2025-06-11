@@ -57,7 +57,10 @@ function RouteComponent() {
         )}
         <button
           className="bg-primary-dark text-white py-2 px-4 rounded-lg hover:cursor-pointer flex items-center justify-center"
-          onClick={() => router.navigate({ to: '/questions/create/$questionId', params: { questionId } })}
+          onClick={() => {
+            router.navigate({ to: '/questions/create/$questionId', params: { questionId } }),
+              resetForm()
+          }}
         >
           <span>Crear nueva respuesta</span>
         </button>
@@ -78,6 +81,6 @@ function RouteComponent() {
           </button>
         </div>
       </div>
-    </section>
+    </section >
   )
 }
