@@ -29,6 +29,7 @@ function RouteComponent() {
 
   const handleEdit = () => {
     edit({ title: title, description: description })
+    resetForm()
     router.navigate({ to: '/', replace: true })
   }
 
