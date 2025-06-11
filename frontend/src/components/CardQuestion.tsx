@@ -58,7 +58,7 @@ export const CardQuestion = (props: CardQuestionProps) => {
           <GrView className="text-white" size={24} />
         </Link>
 
-        <Link to="/"
+        <Link to="/questions/edit/$questionId" params={{ questionId: `${props.id}` }}
           className="bg-green-800 rounded-lg flex items-center justify-center p-2 hover:cursor-pointer"
         >
           <CiEdit className="text-white" size={24} />

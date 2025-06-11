@@ -15,6 +15,7 @@ import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
 import { Route as QuestionsCreateIndexImport } from './routes/questions/create/index'
+import { Route as QuestionsEditQuestionIdImport } from './routes/questions/edit/$questionId'
 import { Route as QuestionsCreateQuestionIdImport } from './routes/questions/create/$questionId'
 
 // Create/Update Routes
@@ -40,6 +41,12 @@ const IndexRoute = IndexImport.update({
 const QuestionsCreateIndexRoute = QuestionsCreateIndexImport.update({
   id: '/questions/create/',
   path: '/questions/create/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const QuestionsEditQuestionIdRoute = QuestionsEditQuestionIdImport.update({
+  id: '/questions/edit/$questionId',
+  path: '/questions/edit/$questionId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -81,6 +88,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuestionsCreateQuestionIdImport
       parentRoute: typeof rootRoute
     }
+    '/questions/edit/$questionId': {
+      id: '/questions/edit/$questionId'
+      path: '/questions/edit/$questionId'
+      fullPath: '/questions/edit/$questionId'
+      preLoaderRoute: typeof QuestionsEditQuestionIdImport
+      parentRoute: typeof rootRoute
+    }
     '/questions/create/': {
       id: '/questions/create/'
       path: '/questions/create'
@@ -98,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/questions/create/$questionId': typeof QuestionsCreateQuestionIdRoute
+  '/questions/edit/$questionId': typeof QuestionsEditQuestionIdRoute
   '/questions/create': typeof QuestionsCreateIndexRoute
 }
 
@@ -106,6 +121,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/questions/create/$questionId': typeof QuestionsCreateQuestionIdRoute
+  '/questions/edit/$questionId': typeof QuestionsEditQuestionIdRoute
   '/questions/create': typeof QuestionsCreateIndexRoute
 }
 
@@ -115,6 +131,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/questions/create/$questionId': typeof QuestionsCreateQuestionIdRoute
+  '/questions/edit/$questionId': typeof QuestionsEditQuestionIdRoute
   '/questions/create/': typeof QuestionsCreateIndexRoute
 }
 
@@ -125,6 +142,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/questions/create/$questionId'
+    | '/questions/edit/$questionId'
     | '/questions/create'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -132,6 +150,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/questions/create/$questionId'
+    | '/questions/edit/$questionId'
     | '/questions/create'
   id:
     | '__root__'
@@ -139,6 +158,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/questions/create/$questionId'
+    | '/questions/edit/$questionId'
     | '/questions/create/'
   fileRoutesById: FileRoutesById
 }
@@ -148,6 +168,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   QuestionsCreateQuestionIdRoute: typeof QuestionsCreateQuestionIdRoute
+  QuestionsEditQuestionIdRoute: typeof QuestionsEditQuestionIdRoute
   QuestionsCreateIndexRoute: typeof QuestionsCreateIndexRoute
 }
 
@@ -156,6 +177,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   QuestionsCreateQuestionIdRoute: QuestionsCreateQuestionIdRoute,
+  QuestionsEditQuestionIdRoute: QuestionsEditQuestionIdRoute,
   QuestionsCreateIndexRoute: QuestionsCreateIndexRoute,
 }
 
@@ -173,6 +195,7 @@ export const routeTree = rootRoute
         "/login",
         "/register",
         "/questions/create/$questionId",
+        "/questions/edit/$questionId",
         "/questions/create/"
       ]
     },
@@ -187,6 +210,9 @@ export const routeTree = rootRoute
     },
     "/questions/create/$questionId": {
       "filePath": "questions/create/$questionId.tsx"
+    },
+    "/questions/edit/$questionId": {
+      "filePath": "questions/edit/$questionId.tsx"
     },
     "/questions/create/": {
       "filePath": "questions/create/index.tsx"
