@@ -32,7 +32,9 @@ function LoginComponent() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center bg-primary-dark">Iniciar Sesión</h2>
+        <h2 className="text-lg font-bold mb-6 text-center">Question Editor</h2>
+
+        <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
