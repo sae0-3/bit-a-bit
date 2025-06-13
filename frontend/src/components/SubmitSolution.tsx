@@ -14,7 +14,7 @@ export const SubmitSolution = (props: SubmitSolutionProps) => {
     canSubmit,
     validationMessage
   } = useSolutionValidation()
-  const { mutate: create, isPending } = useCreateSolution(props.initial_sequence)
+  const { mutate: create, isPending } = useCreateSolution()
 
   const handleCreateSolution = () => {
     if (!canSubmit) return
