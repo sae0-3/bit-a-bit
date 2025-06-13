@@ -7,7 +7,7 @@ Cada pregunta se construye a partir de una secuencia inicial y un conjunto de tr
 ## Tecnologías utilizadas
 
 #### Backend
-- [NestJS](https://nestjs.com/) (Node.js v22.14)
+- [NestJS](https://nestjs.com/)
 - PostgreSQL 17
 - Docker + Docker Compose
 
@@ -16,11 +16,11 @@ Cada pregunta se construye a partir de una secuencia inicial y un conjunto de tr
 - TypeScript
 - Vite
 
-## Cómo correr el proyecto localmente
+## Cómo correr el proyecto localmente (desarrollo)
 
 #### Requisitos previos
 
-- Node.js v22.14
+- Node.js v22.16
 - Docker y Docker Compose
 
 ---
@@ -61,3 +61,29 @@ node --run dev
 
 - Frontend: http://localhost:5173
 - Backend: http://localhost:3000
+
+## Cómo correr el proyecto localmente (producción)
+
+#### Requisitos previos
+
+- Docker y Docker Compose
+
+---
+
+#### 1. Clonar el repositorio
+
+```sh
+git clone https://github.com/sae0-3/bit-a-bit.git
+cd /bit-a-bit
+```
+
+#### 2. Ejecutar con Docker Compose
+
+```sh
+docker compose up -d --build
+```
+
+#### 3. Acceder a la aplicación
+
+- Frontend: https://localhost
+- Backend: https://localhost/api
