@@ -1,0 +1,50 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: prod
+    container_name: questeditor-backend
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+    restart: unless-stopped
+
+  database:
+    image: postgres:17
+    container_name: questeditor-database
+    environment:
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=questeditor
+    volumes:
+      - ./database/structure:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: prod
+    container_name: questeditor-frontend
+    # ports:
+    #   - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: questeditor-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped

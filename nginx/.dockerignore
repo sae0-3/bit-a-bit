@@ -1,0 +1,16 @@
+*.md
+docs/
+
+.git/
+.gitignore
+
+.vscode/
+.idea/
+
+.DS_Store
+Thumbs.db
+
+*.log
+
+# ssl/
+certs/
