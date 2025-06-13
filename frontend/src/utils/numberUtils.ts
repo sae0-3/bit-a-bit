@@ -1,4 +1,5 @@
 import { predefinedOption } from "../types/form-question"
+import { v4 as uuid } from "uuid"
 
 const NumberOperation = {
   moveLastToLeft: (number: string[]) => {
@@ -41,7 +42,7 @@ export const applyNumberOperation = (number: string[], operation: predefinedOpti
 
 export const generateNumberItems = (values: string[]): { id: string, value: string }[] => {
   return values.map((value) => ({
-    id: crypto.randomUUID(),
+    id: uuid(),
     value,
   }))
 }

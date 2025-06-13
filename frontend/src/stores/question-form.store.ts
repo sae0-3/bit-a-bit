@@ -1,4 +1,5 @@
 import { arrayMove } from '@dnd-kit/sortable'
+import { v4 as uuid } from 'uuid'
 import { create } from 'zustand'
 
 import { Answer, Option, predefinedOption } from '../types/form-question'
@@ -70,7 +71,7 @@ export const useQuestionFormStore = create<QuestionFormStore>((set, get) => ({
     options: [
       ...state.options,
       {
-        id: crypto.randomUUID(),
+        id: uuid(),
         value,
       }
     ]
@@ -101,7 +102,7 @@ export const useQuestionFormStore = create<QuestionFormStore>((set, get) => ({
       ...state.answers,
       {
         ...answer,
-        id: crypto.randomUUID(),
+        id: uuid(),
       }
     ]
   })),

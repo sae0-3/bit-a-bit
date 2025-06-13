@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo } from "react"
 import { NumberCard } from "./NumberCard"
 import { predefinedOption } from "../types/form-question"
 import { applyNumberOperation, generateNumberItems } from "../utils/numberUtils"
+import { v4 as uuid } from "uuid"
 
 type NumberCardsProps = {
   number: string[]
@@ -26,7 +27,7 @@ export const NumberCards = ({ number, answer }: NumberCardsProps) => {
       }
       const updatedItems = result.map((id) => {
         const item = initialItems.find((item) => item.id === id)
-        return item ? { ...item } : { id: crypto.randomUUID(), value: "" }
+        return item ? { ...item } : { id: uuid(), value: "" }
       })
       setNumberItems(updatedItems)
     } else {
