@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { createFileRoute } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
 
 import { CreateSolution } from '../../../components/CreateSolution'
 import { ListSolutions } from '../../../components/ListSolutions'
+import { ModalAddAge } from '../../../components/ModalAddAge'
 import { NumberCards } from '../../../components/NumberCards'
 import { SubmitSolution } from '../../../components/SubmitSolution'
 import { useGetQuestionById } from '../../../hooks/useQuestions'
@@ -18,6 +19,7 @@ function CreateQuestionAddAnswersComponent() {
   const { data: question, isLoading, isError, isSuccess } = useGetQuestionById(questionId)
   const { finalSequence, setInitialSequence, setFinalSequence, answerCodes } = useSolutionStore()
   const { mutate: transform } = useTransformSequence()
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     if (question)
@@ -55,12 +57,18 @@ function CreateQuestionAddAnswersComponent() {
           <ListSolutions questionId={questionId} />
         </div>
 
-        <Link
-          to="/"
+        <button
+          onClick={() => setIsOpen(true)}
           className="ml-auto bg-primary-dark text-white py-2 px-4 rounded-lg flex items-center justify-center hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Terminar
-        </Link>
+        </button>
+
+        <ModalAddAge
+          questionId={questionId}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+        />
       </div>
     </section>
   )
