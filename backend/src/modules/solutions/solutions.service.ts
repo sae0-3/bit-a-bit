@@ -15,7 +15,7 @@ export class SolutionsService {
     private readonly validSolutionRepo: Repository<ValidSolution>,
     private readonly questionsService: QuestionsService,
     private readonly patternFunctionsService: PatternFunctionsService,
-  ) {}
+  ) { }
 
   async findAllByQuestionId(userId: string, questionId: string) {
     await this.questionsService.findById(userId, questionId);
@@ -23,6 +23,15 @@ export class SolutionsService {
     return this.validSolutionRepo.find({
       where: { question: { id: questionId } },
     });
+  }
+
+  async findRandomByQuestionId(userId: string, questionId: string) {
+    const solutions = await this.findAllByQuestionId(userId, questionId);
+    if (!solutions || solutions.length === 0) {
+      return null
+    }
+    const solution = solutions[Math.floor(Math.random() * solutions.length)];
+    return solution
   }
 
   async findById(userId: string, solutionId: string) {

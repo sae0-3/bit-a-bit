@@ -19,7 +19,7 @@ import { SolutionsService } from './solutions.service';
 @Controller('solutions')
 @UseGuards(JwtAuthGuard)
 export class SolutionsController {
-  constructor(private readonly solutionsService: SolutionsService) {}
+  constructor(private readonly solutionsService: SolutionsService) { }
 
   @Get('question/:questionId')
   findAllByQuestion(
@@ -32,6 +32,14 @@ export class SolutionsController {
   @Get(':id')
   findOne(@User() user: RequestUser, @Param('id') id: string) {
     return this.solutionsService.findById(user.id, id);
+  }
+
+  @Get('random/:questionId')
+  findRandomByQuestion(
+    @User() user: RequestUser,
+    @Param('questionId') questionId: string,
+  ) {
+    return this.solutionsService.findRandomByQuestionId(user.id, questionId);
   }
 
   @Post()
