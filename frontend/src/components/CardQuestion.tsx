@@ -52,7 +52,7 @@ export const CardQuestion = (props: CardQuestionProps) => {
       </div>
 
       <div className="flex flex-col justify-center items-center gap-1 sm:flex-row lg:gap-2 flex-wrap">
-        <Link to="/"
+        <Link to="/questions/preview/$questionId" params={{ questionId: `${props.id}` }}
           className="bg-primary-dark rounded-lg flex items-center justify-center p-2 hover:cursor-pointer"
         >
           <GrView className="text-white" size={24} />

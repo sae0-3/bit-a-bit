@@ -114,3 +114,15 @@ export const useTransformSequence = () => {
     onError: console.error,
   })
 }
+
+export const useGetRandomSolution = (questionId: string) => {
+  const { user } = useAuthStore()
+
+  return useQuery<SolutionsResponse>({
+    queryKey: ['solutions', 'random', questionId, user?.id],
+    queryFn: async () => {
+      const res = await api.get(`/solutions/random/${questionId}`)
+      return res.data
+    },
+  })
+}
