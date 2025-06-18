@@ -6,7 +6,7 @@ import { useSolutionStore } from '../../../stores/solutions.store'
 import { CreateSolution } from '../../../components/CreateSolution'
 import { useTransformSequence } from '../../../hooks/useSolutions'
 import { VerifySolution } from '../../../components/VerifySolution'
-import { useGetRandomSolution } from '../../../hooks/useSolutions'
+import { useGetNumberSolutionsByQuestion } from '../../../hooks/useSolutions'
 
 export const Route = createFileRoute('/questions/preview/$questionId')({
   component: RouteComponent,
@@ -16,14 +16,13 @@ function RouteComponent() {
   const { questionId } = Route.useParams()
   const { data: question, isLoading, isError, isSuccess } = useGetQuestionById(questionId)
   const { answerCodes, setFinalSequence, setInitialSequence, finalSequence } = useSolutionStore()
+  const { data: solutions, isSuccess: solutionSucces, isError: errorSolutions, isLoading: loadingSolutions } = useGetNumberSolutionsByQuestion(questionId)
   const { mutate: transformSequence } = useTransformSequence()
-  const { data: randomSolution, isError: errorSolution, isLoading: loadingSolution } = useGetRandomSolution(questionId)
-  const sequence = randomSolution ? randomSolution.final_sequence.map(element => String(element)) : []
 
   useEffect(() => {
-    if (question && randomSolution)
+    if (question && solutions)
       setInitialSequence(question.initial_sequence)
-  }, [isSuccess, question, randomSolution])
+  }, [isSuccess, question, solutions])
 
   useEffect(() => {
     if (answerCodes.length > 0)
@@ -32,7 +31,7 @@ function RouteComponent() {
       setFinalSequence(question.initial_sequence)
   }, [answerCodes])
 
-  if (isLoading || loadingSolution) return (
+  if (isLoading || loadingSolutions) return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="text-lg text-gray-600">Cargando pregunta...</div>
     </div>
@@ -44,7 +43,7 @@ function RouteComponent() {
     </div>
   )
 
-  if (errorSolution || !randomSolution) return (
+  if (errorSolutions || !solutions) return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="text-lg text-red-600">Error al cargar la solución o no tiene soluciones agregadas</div>
     </div>
@@ -74,8 +73,15 @@ function RouteComponent() {
 
             <div className="text-center">
               <h2 className="font-semibold text-lg text-gray-800 mb-3">Secuencia Objetivo</h2>
-              <div className="bg-primary-light rounded-lg p-4 inline-block">
-                <NumberCards number={sequence} />
+              <div className='flex justify-center items-center flex-col'>
+                {
+                  solutions && solutionSucces && (
+                    solutions.map(solutionNumber => (
+                      <div className="bg-primary-light rounded-lg p-4 inline-block">
+                        <NumberCards number={solutionNumber} />
+                      </div>
+                    )))
+                }
               </div>
             </div>
           </div>
@@ -87,7 +93,7 @@ function RouteComponent() {
           </div>
 
           <div className="px-4">
-            <VerifySolution solutionId={randomSolution.id} />
+            <VerifySolution questionId={questionId} />
           </div>
         </div>
 

@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useSolutionValidation } from '../hooks/useSolutions'
 import { useSolutionStore } from '../stores/solutions.store'
-import { useValidateSolution } from '../hooks/useSolutions'
+import { useValidateAllSolutions } from '../hooks/useSolutions'
 
 export interface VerifySolutionProps {
-  solutionId: string
+  questionId: string
 }
 
-export const VerifySolution = ({ solutionId }: VerifySolutionProps) => {
+export const VerifySolution = ({ questionId }: VerifySolutionProps) => {
   const { clearAnswer } = useSolutionStore()
   const [message, setMessage] = useState<string | null>(null)
-  const { mutate: validateSolution, data, isSuccess } = useValidateSolution(
+  const { mutate: validateSolutions, data, isSuccess } = useValidateAllSolutions(
     {
       onSuccess: (data) => {
         setMessage(data.message)
@@ -27,7 +27,7 @@ export const VerifySolution = ({ solutionId }: VerifySolutionProps) => {
 
   const handleVerifySolution = () => {
     if (!canSubmit) return
-    validateSolution(solutionId)
+    validateSolutions(questionId)
   }
 
   useEffect(() => {

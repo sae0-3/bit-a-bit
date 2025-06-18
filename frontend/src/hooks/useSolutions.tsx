@@ -142,3 +142,31 @@ export const useValidateSolution = (options?: UseMutationOptions<ValidateSolutio
     ...options
   })
 }
+
+export const useGetNumberSolutionsByQuestion = (questionId: string) => {
+  const { user } = useAuthStore()
+
+  return useQuery<Array<Array<string>>>({
+    queryKey: ['solutions', 'numbers', questionId, user?.id],
+    queryFn: async () => {
+      const res = await api.get(`/solutions/numbers/${questionId}`)
+      return res.data
+    },
+  })
+}
+
+export const useValidateAllSolutions = (options?: UseMutationOptions<ValidateSolutionResponse, AxiosError, string>) => {
+  const { answerCodes, finalSequence } = useSolutionStore()
+
+  return useMutation<ValidateSolutionResponse, AxiosError, string>({
+    mutationFn: async (question_id: string) => {
+      const res = await api.post('/solutions/Validate-All', {
+        question_id: question_id,
+        solution: finalSequence,
+        path: answerCodes,
+      })
+      return res.data
+    },
+    ...options,
+  })
+}
