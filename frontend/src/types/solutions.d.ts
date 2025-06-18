@@ -35,3 +35,8 @@ export interface CreateSolutionResponse {
   created_at: string
   updated_at: string
 }
+
+export interface ValidateSolutionResponse {
+  valid: boolean
+  message: string
+}

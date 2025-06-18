@@ -87,7 +87,7 @@ function RouteComponent() {
           </div>
 
           <div className="px-4">
-            <VerifySolution />
+            <VerifySolution solutionId={randomSolution.id} />
           </div>
         </div>
 

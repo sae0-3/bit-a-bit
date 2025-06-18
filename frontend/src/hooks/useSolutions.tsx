@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, UseMutationOptions, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 
 import api from '../api/axios'
@@ -8,6 +8,7 @@ import { useSolutionStore } from '../stores/solutions.store'
 import {
   CreateSolutionResponse,
   SolutionsResponse,
+  ValidateSolutionResponse,
 } from '../types/solutions'
 
 export const useSolutionValidation = () => {
@@ -124,5 +125,20 @@ export const useGetRandomSolution = (questionId: string) => {
       const res = await api.get(`/solutions/random/${questionId}`)
       return res.data
     },
+  })
+}
+
+export const useValidateSolution = (options?: UseMutationOptions<ValidateSolutionResponse, AxiosError, string>) => {
+  const { answerCodes } = useSolutionStore()
+
+  return useMutation<ValidateSolutionResponse, AxiosError, string>({
+    mutationFn: async (solutionId: string) => {
+      const res = await api.post('/solutions/Validate', {
+        path: answerCodes,
+        solution_id: solutionId,
+      })
+      return res.data
+    },
+    ...options
   })
 }
