@@ -14,6 +14,7 @@ import { RequestUser } from '../auth/interfaces/jwt-payload.interface';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateSolutionDto } from './dto/create-solution.dto';
 import { UpdateSolutionDto } from './dto/update-solution.dto';
+import { ValidateSolutionDto } from './dto/validate-solution.dto';
 import { SolutionsService } from './solutions.service';
 
 @Controller('solutions')
@@ -59,5 +60,13 @@ export class SolutionsController {
   @Delete(':id')
   delete(@User() user: RequestUser, @Param('id') id: string) {
     return this.solutionsService.delete(user.id, id);
+  }
+
+  @Post('Validate')
+  validateSolution(
+    @User() user: RequestUser,
+    @Body() dto: ValidateSolutionDto,
+  ) {
+    return this.solutionsService.validateSolution(user.id, dto);
   }
 }

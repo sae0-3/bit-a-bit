@@ -7,6 +7,7 @@ import { PatternFunctionsService } from '../patterns/pattern-function.service';
 import { QuestionsService } from '../questions/questions.service';
 import { CreateSolutionDto } from './dto/create-solution.dto';
 import { UpdateSolutionDto } from './dto/update-solution.dto';
+import { ValidateSolutionDto } from './dto/validate-solution.dto';
 
 @Injectable()
 export class SolutionsService {
@@ -31,6 +32,7 @@ export class SolutionsService {
       return null
     }
     const solution = solutions[Math.floor(Math.random() * solutions.length)];
+    console.log('Random solution:', solution);
     return solution
   }
 
@@ -100,5 +102,29 @@ export class SolutionsService {
     }
 
     return solution;
+  }
+
+  async validateSolution(userId: string, dto: ValidateSolutionDto) {
+    const { path, solution_id } = dto;
+    const solution = await this.assertOwnership(userId, solution_id);
+    console.log('Validating solution:', solution.path, " ", path);
+    console.log('final_sequence:', solution.final_sequence, 'length:', solution.final_sequence.length, 'path:', path.length);
+    let res = true;
+    if (path.length === solution.path.length) {
+      for (let i = 0; i < path.length; i++) {
+        if (path[i] !== solution.path[i]) {
+          res = false;
+        }
+      }
+      return {
+        valid: res,
+        message: res ? 'La solución es correcta' : 'La solución es incorrecta',
+      };
+    } else {
+      return {
+        valid: false,
+        message: 'La cantidad de pasos no coincide con la solución esperada',
+      };
+    }
   }
 }
