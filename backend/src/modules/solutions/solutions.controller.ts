@@ -70,6 +70,14 @@ export class SolutionsController {
     return this.solutionsService.validateSolution(user.id, dto);
   }
 
+  @Post('Validate-All')
+  validateAllSolutions(
+    @User() user: RequestUser,
+    @Body() dto: { question_id: string; path: Array<string>, solution: Array<string> },
+  ) {
+    return this.solutionsService.validateAllSolutions(user.id, dto);
+  }
+
   @Get('numbers/:questionId')
   getNumberSolutionsByQuestion(
     @User() user: RequestUser,

@@ -107,8 +107,6 @@ export class SolutionsService {
   async validateSolution(userId: string, dto: ValidateSolutionDto) {
     const { path, solution_id } = dto;
     const solution = await this.assertOwnership(userId, solution_id);
-    console.log('Validating solution:', solution.path, " ", path);
-    console.log('final_sequence:', solution.final_sequence, 'length:', solution.final_sequence.length, 'path:', path.length);
     let res = true;
     if (path.length === solution.path.length) {
       for (let i = 0; i < path.length; i++) {
@@ -135,5 +133,34 @@ export class SolutionsService {
       new Set(final_sequences.map(seq => JSON.stringify(seq)))
     ).map(str => JSON.parse(str));
     return unique_sequences
+  }
+
+  async validateAllSolutions(userId: string, dto: { question_id: string; path: Array<string>, solution: Array<string> }) {
+    const { question_id, path, solution } = dto;
+    const solutions = await this.findAllByQuestionId(userId, question_id);
+    const unique_sequences = await this.getNumberSolutionsByQuestion(userId, question_id);
+
+    if (!solutions || solutions.length === 0) {
+      throw new NotFoundException('No hay soluciones para validar');
+    }
+
+    const isValidPath = solutions.some(sol =>
+      JSON.stringify(sol.path) === JSON.stringify(path)
+    );
+
+    const isValidSolution = unique_sequences.some(sol =>
+      JSON.stringify(sol) === JSON.stringify(solution)
+    );
+
+    return {
+      valid: isValidPath && isValidSolution,
+      message: isValidSolution && isValidPath
+        ? 'La solución obtenida es correcta y el patrón coincide con una solución existente'
+        : isValidSolution ?
+          'La solución obtenida es correcta, pero el patrón no coincide con ninguna solución existente' :
+          isValidPath ?
+            'El patrón coincide con una solución existente, pero la solución obtenida no es correcta' :
+            'El patron y la solución no coinciden con ninguna solución existente',
+    };
   }
 }
