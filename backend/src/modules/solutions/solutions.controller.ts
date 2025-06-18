@@ -69,4 +69,12 @@ export class SolutionsController {
   ) {
     return this.solutionsService.validateSolution(user.id, dto);
   }
+
+  @Get('numbers/:questionId')
+  getNumberSolutionsByQuestion(
+    @User() user: RequestUser,
+    @Param('questionId') questionId: string,
+  ) {
+    return this.solutionsService.getNumberSolutionsByQuestion(user.id, questionId)
+  }
 }

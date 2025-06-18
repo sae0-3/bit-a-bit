@@ -127,4 +127,13 @@ export class SolutionsService {
       };
     }
   }
+
+  async getNumberSolutionsByQuestion(userId: string, questionId: string) {
+    const solutions = await this.findAllByQuestionId(userId, questionId);
+    const final_sequences = solutions.map(solution => solution.final_sequence);
+    const unique_sequences = Array.from(
+      new Set(final_sequences.map(seq => JSON.stringify(seq)))
+    ).map(str => JSON.parse(str));
+    return unique_sequences
+  }
 }
