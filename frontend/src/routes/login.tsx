@@ -1,9 +1,12 @@
 import { useForm } from '@tanstack/react-form'
 import { createFileRoute, redirect } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 
+import { useState } from 'react'
 import { loginSchema } from '../dtos/login-dto'
 import { useLogin } from '../hooks/useAuth'
 import { useAuthStore } from '../stores/auth.store'
+import { LuEye } from 'react-icons/lu'
 
 export const Route = createFileRoute('/login')({
   component: LoginComponent,
@@ -20,7 +23,9 @@ export const Route = createFileRoute('/login')({
 })
 
 function LoginComponent() {
+  const router = useNavigate()
   const { mutate: login, isPending, isError } = useLogin()
+  const [showPassword, setShowPassword] = useState(false)
 
   const form = useForm({
     defaultValues: {
@@ -80,15 +85,20 @@ function LoginComponent() {
               children={(field) => (
                 <>
                   <label htmlFor={field.name} className="block mb-1 font-medium">Contraseña</label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    type="password"
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                    placeholder="••••••••"
-                  />
+                  <div className='relative'>
+                    <input
+                      id={field.name}
+                      name={field.name}
+                      type={showPassword ? 'text' : 'password'}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      className="w-full border border-gray-300 rounded px-3 py-2"
+                      placeholder="••••••••"
+                    />
+                    <LuEye
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+                      onClick={() => { setShowPassword(!showPassword) }} />
+                  </div>
 
                   {!field.state.meta.isValid && (
                     <p className="text-red-500">
@@ -103,14 +113,22 @@ function LoginComponent() {
           {isError && (
             <p className="text-red-500 mb-4 text-center">Credenciales inválidas</p>
           )}
-
-          <button
-            type="submit"
-            disabled={isPending}
-            className="w-full bg-primary-dark text-white py-2 hover:bg-blue-700 hover:cursor-pointer transition rounded-md disabled:opacity-70"
-          >
-            {isPending ? 'Cargando...' : 'Ingresar'}
-          </button>
+          <div className='flex flex-col gap-4'>
+            <button
+              type="submit"
+              disabled={isPending}
+              className="w-full bg-primary-dark text-white py-2 hover:bg-secondary-1 hover:text-black hover:cursor-pointer transition rounded-md disabled:opacity-70"
+            >
+              {isPending ? 'Cargando...' : 'Ingresar'}
+            </button>
+            <button
+              type="button"
+              className="w-full bg-primary-dark text-white py-2 hover:bg-secondary-1 hover:text-black hover:cursor-pointer transition rounded-md disabled:opacity-70"
+              onClick={() => router({ to: '/register', replace: true })}
+            >
+              Registrarse
+            </button>
+          </div>
         </form>
       </div>
     </div>
