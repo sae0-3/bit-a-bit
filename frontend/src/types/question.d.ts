@@ -1,17 +1,20 @@
-import { Answer, Option } from './form-question'
 import { PatternResponse } from './patterns'
 
-export interface Question {
-  id: string
+export interface QuestionFormStore {
   title: string
-  description: string | null
-  images: string[] | null
+  description: string
+  images: string[]
+  initialNumber: string[]
 
-  options: Option[]
-  answers: Answer[]
+  setTitle: (title: string) => void
+  setDescription: (description: string) => void
+  setImages: (images: string[]) => void
+  addImage: (image: string) => void
+  removeImage: (index: number) => void
 
-  updated_at: string
-  created_at: string
+  resetForm: () => void
+
+  setInitialNumber: (number: string[]) => void
 }
 
 export interface QuestionResponse {

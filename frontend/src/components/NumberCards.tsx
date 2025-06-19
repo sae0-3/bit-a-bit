@@ -1,9 +1,7 @@
-import { motion } from "framer-motion"
-import { predefinedOption } from "../types/form-question"
+import { motion } from 'framer-motion'
 
 type NumberCardsProps = {
   number: string[]
-  answer?: predefinedOption[]
 }
 
 export const NumberCards = ({ number }: NumberCardsProps) => {
