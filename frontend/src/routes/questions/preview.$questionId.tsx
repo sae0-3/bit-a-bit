@@ -78,7 +78,7 @@ function RouteComponent() {
                   solutions && solutionSucces && (
                     solutions.map(solutionNumber => (
                       <div className="bg-primary-light rounded-lg p-4 inline-block">
-                        <NumberCards number={solutionNumber} />
+                        <NumberCards number={solutionNumber} targetSequence={finalSequence} />
                       </div>
                     )))
                 }
