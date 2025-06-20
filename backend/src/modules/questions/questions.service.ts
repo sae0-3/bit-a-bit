@@ -22,6 +22,9 @@ export class QuestionsService {
     return this.questionRepo.find({
       where: { created_by: { id: userId } },
       relations: ['created_by'],
+      order: {
+        updated_at: 'desc',
+      },
     });
   }
 
