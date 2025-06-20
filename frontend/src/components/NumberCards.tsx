@@ -7,7 +7,7 @@ type NumberCardsProps = {
 export const NumberCards = ({ number }: NumberCardsProps) => {
 
   return (
-    <div className="flex flex-wrap gap-4 pt-2 justify-center items-center w-full p-4">
+    <div className="flex flex-wrap gap-4 justify-center items-center w-full">
       {number.map((item, idx) => (
         <motion.div
           key={idx}

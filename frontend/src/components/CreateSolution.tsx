@@ -1,5 +1,5 @@
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, pointerWithin } from '@dnd-kit/core'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useGetPatternsAvailable } from '../hooks/usePatterns'
 import { useSensors } from '../hooks/useSensors'
@@ -16,6 +16,7 @@ export const CreateSolution = () => {
     addToAnswer,
     removeFromAnswer,
     reorderAnswer,
+    clearAnswer,
   } = useSolutionStore()
   const sensors = useSensors()
   const [activeOpt, setActiveOpt] = useState<Item | null>(null)
@@ -25,6 +26,8 @@ export const CreateSolution = () => {
     value: pattern.name,
   })) || []
   const optionsList: Item[] = patternsParsed
+
+  useEffect(() => clearAnswer(), [])
 
   const handleDragStart = (event: DragStartEvent) => {
     const activeId = String(event.active.id)
