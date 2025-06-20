@@ -1,8 +1,6 @@
 import { createFileRoute, useCanGoBack, useRouter } from '@tanstack/react-router'
 
-import { AddNumberGame } from '../../../components/AddNumberGame'
-import { DescriptionEditor } from '../../../components/DescriptionEditor'
-// import { DropzoneImagesUpload } from '../../../components/DropzoneImagesUpload'
+import { FormQuestion } from '../../../components/FormQuestion'
 import { useCreateQuestion } from '../../../hooks/useQuestions'
 import { useQuestionFormStore } from '../../../stores/question-form.store'
 
@@ -36,15 +34,10 @@ function CreateQuestionComponent() {
       <h1 className="font-bold text-2xl">Registra tu pregunta</h1>
 
       <div className="w-10/12 flex flex-col justify-center items-center gap-5 max-w-xl">
-        <form
-          className="w-full flex flex-col gap-4"
+        <FormQuestion
+          formId="create-question-form"
           onSubmit={handleSubmit}
-          id="question-create-form"
-        >
-          <DescriptionEditor />
-          {/* <DropzoneImagesUpload /> */}
-          <AddNumberGame />
-        </form>
+        />
 
         <div className="w-full flex justify-between items-center gap-2 flex-wrap">
           <button
@@ -56,7 +49,7 @@ function CreateQuestionComponent() {
           <button
             className="bg-primary-dark text-white py-2 px-4 rounded-lg hover:cursor-pointer flex items-center justify-center disabled:opacity-50"
             type="submit"
-            form="question-create-form"
+            form="create-question-form"
             disabled={isPending}
           >
             <span>{isPending ? 'Registrando...' : 'Registrar pregunta'}</span>

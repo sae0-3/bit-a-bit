@@ -1,10 +1,8 @@
 import { createFileRoute, useCanGoBack, useRouter } from '@tanstack/react-router'
 
-import { useGetQuestionById } from '../../../hooks/useQuestions'
-import { useUpdateQuestionById } from '../../../hooks/useQuestions'
-import { DescriptionEditor } from '../../../components/DescriptionEditor'
+import { FormQuestion } from '../../../components/FormQuestion'
+import { useGetQuestionById, useUpdateQuestionById } from '../../../hooks/useQuestions'
 import { useQuestionFormStore } from '../../../stores/question-form.store'
-import { useEffect } from 'react'
 
 export const Route = createFileRoute('/questions/edit/$questionId')({
   component: RouteComponent,
@@ -12,9 +10,9 @@ export const Route = createFileRoute('/questions/edit/$questionId')({
 
 function RouteComponent() {
   const { questionId } = Route.useParams()
-  const { data: question, isPending, isError } = useGetQuestionById(questionId)
-  const { mutate: edit } = useUpdateQuestionById(questionId)
-  const { resetForm, title, description, setDescription, setTitle } = useQuestionFormStore()
+  const { data: question, isLoading } = useGetQuestionById(questionId)
+  const { mutate: edit, isPending, isError } = useUpdateQuestionById(questionId)
+  const { resetForm, title, description } = useQuestionFormStore()
   const router = useRouter()
   const canGoBack = useCanGoBack()
 
@@ -27,34 +25,29 @@ function RouteComponent() {
     resetForm()
   }
 
-  const handleEdit = () => {
-    edit({ title: title, description: description })
-    resetForm()
-    router.navigate({ to: '/', replace: true })
+  const handleEdit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    edit({ title, description })
   }
 
-  useEffect(() => {
-    if (question) {
-      setTitle(question.title)
-      setDescription(String(question.description))
-    }
-  }
-    , [question])
+  if (isLoading) return null
 
   return (
     <section className="flex w-full flex-col justify-center items-center gap-5 py-4">
       <h1 className="font-bold text-2xl">Registra tu pregunta</h1>
 
       <div className="w-10/12 flex flex-col justify-center items-center gap-5 max-w-xl">
-        <div className="w-full flex flex-col gap-4">
-          <DescriptionEditor />
-        </div>
+        <FormQuestion
+          formId="update-question-form"
+          onSubmit={handleEdit}
+          initialValues={{
+            title: question?.title,
+            description: question?.description ?? '',
+            sequence: question?.initial_sequence,
+          }}
+          editable={false}
+        />
 
-        {isError && (
-          <p className='text-center text-red-500'>
-            Ocurrió un problema al crear la pregunta
-          </p>
-        )}
         <button
           className="bg-primary-dark text-white py-2 px-4 rounded-lg hover:cursor-pointer flex items-center justify-center"
           onClick={() => {
@@ -74,12 +67,19 @@ function RouteComponent() {
           </button>
           <button
             className="bg-primary-dark text-white py-2 px-4 rounded-lg hover:cursor-pointer flex items-center justify-center disabled:opacity-50"
-            onClick={() => handleEdit()}
+            type="submit"
+            form="update-question-form"
             disabled={isPending}
           >
             <span>{isPending ? 'Editando...' : 'Editar pregunta'}</span>
           </button>
         </div>
+
+        {isError && (
+          <p className="text-center text-red-500">
+            Ocurrió un problema al editar la pregunta
+          </p>
+        )}
       </div>
     </section >
   )
