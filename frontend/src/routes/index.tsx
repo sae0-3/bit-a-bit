@@ -21,7 +21,7 @@ function IndexQuestionComponent() {
 
   return (
     <section className="flex flex-col items-center py-6 gap-6 lg:gap-8">
-      <div className="w-10/12 flex flex-col items-center flex-wrap gap-2 lg:flex-row lg:justify-between">
+      <div className="w-10/12 max-w-4xl flex flex-col items-center flex-wrap gap-2 lg:flex-row lg:justify-between">
         <h1 className="text-2xl font-bold">Preguntas Creadas</h1>
 
         <Link
@@ -37,7 +37,7 @@ function IndexQuestionComponent() {
       {!Array.isArray(questions) || questions.length === 0 ? (
         <span className="text-gray-500 text-center italic">No existen preguntas creadas</span>
       ) : (
-        <div className="w-10/12 flex flex-col gap-4">
+        <div className="w-10/12 max-w-4xl flex flex-col gap-4">
           {questions.map(question => (
             <CardQuestion
               key={question.id}

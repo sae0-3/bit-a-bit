@@ -33,7 +33,7 @@ function CreateQuestionComponent() {
     <section className="flex w-full flex-col justify-center items-center gap-5 py-4">
       <h1 className="font-bold text-2xl">Registra tu pregunta</h1>
 
-      <div className="w-10/12 flex flex-col justify-center items-center gap-5 max-w-xl">
+      <div className="w-10/12 max-w-4xl flex flex-col justify-center items-center gap-5">
         <FormQuestion
           formId="create-question-form"
           onSubmit={handleSubmit}

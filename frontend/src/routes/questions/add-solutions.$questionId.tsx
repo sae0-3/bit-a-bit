@@ -45,7 +45,7 @@ function CreateQuestionAddAnswersComponent() {
     <section className="flex w-full flex-col justify-center items-center gap-5 py-4">
       <h1 className="font-bold text-2xl text-center">Agregar Respuestas</h1>
 
-      <div className="w-10/12 flex flex-col gap-4">
+      <div className="w-10/12 max-w-4xl flex flex-col gap-4">
         <NumberCards number={finalSequence} />
 
         <div className="w-full flex flex-col gap-3">

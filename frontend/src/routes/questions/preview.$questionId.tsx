@@ -50,9 +50,8 @@ function RouteComponent() {
   )
 
   return (
-    <section className="flex flex-col items-center gap-6 lg:gap-8 ">
-      <div className="w-10/12 rounded-lg p-6 lg:p-8 space-y-6">
-
+    <section className="flex flex-col items-center gap-6 lg:gap-8">
+      <div className="w-10/12 max-w-4xl py-6 space-y-6">
         <div className="text-center space-y-3">
           <h1 className={`font-bold text-2xl ${!question.title ? 'opacity-50 text-gray-400' : 'text-gray-900'}`}>
             {question.title || 'Sin título'}
@@ -74,14 +73,13 @@ function RouteComponent() {
             <div className="text-center">
               <h2 className="font-semibold text-lg text-gray-800 mb-3">Secuencia Objetivo</h2>
               <div className='flex justify-center items-center flex-col'>
-                {
-                  solutions && solutionSucces && (
-                    solutions.map(solutionNumber => (
-                      <div className="bg-primary-light rounded-lg p-4 inline-block">
-                        <NumberCards number={solutionNumber} targetSequence={finalSequence} />
-                      </div>
-                    )))
-                }
+                {solutions && solutionSucces && (
+                  solutions.map(solutionNumber => (
+                    <div className="bg-primary-light rounded-lg p-4 inline-block">
+                      <NumberCards number={solutionNumber} targetSequence={finalSequence} />
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>

@@ -10,14 +10,12 @@ export interface VerifySolutionProps {
 export const VerifySolution = ({ questionId }: VerifySolutionProps) => {
   const { clearAnswer } = useSolutionStore()
   const [message, setMessage] = useState<string | null>(null)
-  const { mutate: validateSolutions, data, isSuccess } = useValidateAllSolutions(
-    {
-      onSuccess: (data) => {
-        setMessage(data.message)
-        console.log('Respuesta validación:', data);
-      }
+  const { mutate: validateSolutions, data, isSuccess } = useValidateAllSolutions({
+    onSuccess: (data) => {
+      setMessage(data.message)
+      console.log('Respuesta validación:', data);
     }
-  )
+  })
   const {
     isValidAnswer,
     answerCount,
@@ -37,14 +35,13 @@ export const VerifySolution = ({ questionId }: VerifySolutionProps) => {
   }, [data, isSuccess, answerCount])
 
   return (
-    <>
-      <div>
-        {data && isSuccess && (
-          <h3 className={`text-center ${data.valid ? 'text-green-600' : 'text-red-600'}`}>
-            {message}
-          </h3>
-        )}
-      </div>
+    <div className="flex flex-col gap-3">
+      {data && isSuccess && (
+        <h3 className={`text-center ${data.valid ? 'text-green-600' : 'text-red-600'}`}>
+          {message}
+        </h3>
+      )}
+
       <div className="flex flex-col gap-2 items-center lg:flex-row lg:justify-between">
         <div className="flex flex-col gap-2">
           {validationMessage && (
@@ -77,6 +74,6 @@ export const VerifySolution = ({ questionId }: VerifySolutionProps) => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   )
 }
