@@ -1,8 +1,8 @@
 import { createFileRoute, useCanGoBack, useRouter } from '@tanstack/react-router'
 
-import { FormQuestion } from '../../../components/FormQuestion'
-import { useGetQuestionById, useUpdateQuestionById } from '../../../hooks/useQuestions'
-import { useQuestionFormStore } from '../../../stores/question-form.store'
+import { FormQuestion } from '../../components/FormQuestion'
+import { useGetQuestionById, useUpdateQuestionById } from '../../hooks/useQuestions'
+import { useQuestionFormStore } from '../../stores/question-form.store'
 
 export const Route = createFileRoute('/questions/edit/$questionId')({
   component: RouteComponent,
@@ -51,8 +51,11 @@ function RouteComponent() {
         <button
           className="bg-primary-dark text-white py-2 px-4 rounded-lg hover:cursor-pointer flex items-center justify-center"
           onClick={() => {
-            router.navigate({ to: '/questions/create/$questionId', params: { questionId } }),
-              resetForm()
+            router.navigate({
+              to: '/questions/add-solutions/$questionId',
+              params: { questionId },
+            })
+            resetForm()
           }}
         >
           <span>Crear nueva respuesta</span>

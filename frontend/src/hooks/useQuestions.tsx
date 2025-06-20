@@ -54,7 +54,7 @@ export const useCreateQuestion = () => {
         queryKey: ['questions', user?.id]
       })
       navigate({
-        to: '/questions/create/$questionId',
+        to: '/questions/add-solutions/$questionId',
         params: { questionId: data.id }
       })
       resetForm()

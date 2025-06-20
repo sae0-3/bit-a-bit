@@ -1,12 +1,12 @@
-import { useEffect } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useGetQuestionById } from '../../../hooks/useQuestions'
-import { NumberCards } from '../../../components/NumberCards'
-import { useSolutionStore } from '../../../stores/solutions.store'
-import { CreateSolution } from '../../../components/CreateSolution'
-import { useTransformSequence } from '../../../hooks/useSolutions'
-import { VerifySolution } from '../../../components/VerifySolution'
-import { useGetNumberSolutionsByQuestion } from '../../../hooks/useSolutions'
+import { useEffect } from 'react'
+
+import { CreateSolution } from '../../components/CreateSolution'
+import { NumberCards } from '../../components/NumberCards'
+import { VerifySolution } from '../../components/VerifySolution'
+import { useGetQuestionById } from '../../hooks/useQuestions'
+import { useGetNumberSolutionsByQuestion, useTransformSequence } from '../../hooks/useSolutions'
+import { useSolutionStore } from '../../stores/solutions.store'
 
 export const Route = createFileRoute('/questions/preview/$questionId')({
   component: RouteComponent,
@@ -96,7 +96,6 @@ function RouteComponent() {
             <VerifySolution questionId={questionId} />
           </div>
         </div>
-
       </div>
     </section>
   )

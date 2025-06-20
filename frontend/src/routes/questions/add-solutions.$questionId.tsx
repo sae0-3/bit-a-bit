@@ -1,16 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
-import { CreateSolution } from '../../../components/CreateSolution'
-import { ListSolutions } from '../../../components/ListSolutions'
-import { ModalAddAge } from '../../../components/ModalAddAge'
-import { NumberCards } from '../../../components/NumberCards'
-import { SubmitSolution } from '../../../components/SubmitSolution'
-import { useGetQuestionById } from '../../../hooks/useQuestions'
-import { useTransformSequence } from '../../../hooks/useSolutions'
-import { useSolutionStore } from '../../../stores/solutions.store'
+import { CreateSolution } from '../../components/CreateSolution'
+import { ListSolutions } from '../../components/ListSolutions'
+import { ModalAddAge } from '../../components/ModalAddAge'
+import { NumberCards } from '../../components/NumberCards'
+import { SubmitSolution } from '../../components/SubmitSolution'
+import { useGetQuestionById } from '../../hooks/useQuestions'
+import { useTransformSequence } from '../../hooks/useSolutions'
+import { useSolutionStore } from '../../stores/solutions.store'
 
-export const Route = createFileRoute('/questions/create/$questionId')({
+export const Route = createFileRoute('/questions/add-solutions/$questionId')({
   component: CreateQuestionAddAnswersComponent,
 })
 
