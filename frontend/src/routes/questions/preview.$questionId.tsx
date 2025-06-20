@@ -74,8 +74,8 @@ function RouteComponent() {
               <h2 className="font-semibold text-lg text-gray-800 mb-3">Secuencia Objetivo</h2>
               <div className='flex justify-center items-center flex-col'>
                 {solutions && solutionSucces && (
-                  solutions.map(solutionNumber => (
-                    <div className="bg-primary-light rounded-lg p-4 inline-block">
+                  solutions.map((solutionNumber, idx) => (
+                    <div key={`solution-${idx}`} className="bg-primary-light rounded-lg p-4 inline-block">
                       <NumberCards number={solutionNumber} targetSequence={finalSequence} />
                     </div>
                   ))
