@@ -23,7 +23,7 @@ export class DatabaseModule {
             ),
             entities: [User, Question, QuestionPattern, ValidSolution, Pattern],
             synchronize: false,
-            logging: true,
+            logging: false,
             ssl:
               configService.get('NODE_ENV') === 'production'
                 ? { rejectUnauthorized: false }
