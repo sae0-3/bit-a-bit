@@ -1,33 +1,43 @@
 import { useState } from 'react'
 
 interface FormAgeProps {
-  update: (data: { min_age: number | undefined, max_age: number | undefined }) => void
+  minAge?: number | null
+  maxAge?: number | null
+  update: (data: { min_age?: number | null, max_age?: number | null }) => void
 }
 
-export const FormAge = ({ update }: FormAgeProps) => {
-  const [minAge, setMinAge] = useState<number | undefined>()
-  const [maxAge, setMaxAge] = useState<number | undefined>()
+export const FormAge = ({ update, ...props }: FormAgeProps) => {
+  const [minAge, setMinAge] = useState(props.minAge)
+  const [maxAge, setMaxAge] = useState(props.maxAge)
   const [error, setError] = useState<string>("")
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (minAge !== undefined && maxAge !== undefined && maxAge < minAge) {
+    if (minAge !== undefined &&
+      minAge !== null &&
+      maxAge !== undefined &&
+      maxAge !== null &&
+      maxAge < minAge) {
       setError("La edad máxima debe ser mayor o igual a la mínima")
       return
     }
 
     setError("")
     update({
-      min_age: minAge,
-      max_age: maxAge,
+      min_age: minAge === undefined ? null : minAge,
+      max_age: maxAge === undefined ? null : maxAge,
     })
   }
 
   const handleMinAgeChange = (inputValue: string) => {
     const value = inputValue === '' ? undefined : Number(inputValue)
     setMinAge(value)
-    if (value !== undefined && maxAge !== undefined && value <= maxAge) {
+    if (value !== undefined &&
+      value !== null &&
+      maxAge !== undefined &&
+      maxAge !== null &&
+      value <= maxAge) {
       setError("")
     }
   }
@@ -35,7 +45,9 @@ export const FormAge = ({ update }: FormAgeProps) => {
   const handleMaxAgeChange = (inputValue: string) => {
     const value = inputValue === '' ? undefined : Number(inputValue)
     setMaxAge(value)
-    if (value !== undefined && minAge !== undefined && value >= minAge) {
+    if (value !== undefined &&
+      value !== null &&
+      minAge !== undefined && minAge !== null && value >= minAge) {
       setError("")
     }
   }
