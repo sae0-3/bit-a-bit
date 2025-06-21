@@ -1,14 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
-import { CreateSolution } from '../../components/CreateSolution'
-import { NumberCards } from '../../components/NumberCards'
-import { VerifySolution } from '../../components/VerifySolution'
-import { useGetQuestionById } from '../../hooks/useQuestions'
-import { useGetNumberSolutionsByQuestion, useTransformSequence } from '../../hooks/useSolutions'
-import { useSolutionStore } from '../../stores/solutions.store'
+import { CreateSolution } from '../../../components/CreateSolution'
+import { NumberCards } from '../../../components/NumberCards'
+import { VerifySolution } from '../../../components/VerifySolution'
+import { useGetQuestionById } from '../../../hooks/useQuestions'
+import { useGetNumberSolutionsByQuestion, useTransformSequence } from '../../../hooks/useSolutions'
+import { useSolutionStore } from '../../../stores/solutions.store'
 
-export const Route = createFileRoute('/questions/preview/$questionId')({
+export const Route = createFileRoute('/_authenticated/questions/preview/$questionId')({
   component: RouteComponent,
 })
 

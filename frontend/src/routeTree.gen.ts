@@ -13,11 +13,12 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
-import { Route as IndexImport } from './routes/index'
-import { Route as QuestionsCreateImport } from './routes/questions/create'
-import { Route as QuestionsPreviewQuestionIdImport } from './routes/questions/preview.$questionId'
-import { Route as QuestionsEditQuestionIdImport } from './routes/questions/edit.$questionId'
-import { Route as QuestionsAddSolutionsQuestionIdImport } from './routes/questions/add-solutions.$questionId'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
+import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedQuestionsCreateImport } from './routes/_authenticated/questions/create'
+import { Route as AuthenticatedQuestionsPreviewQuestionIdImport } from './routes/_authenticated/questions/preview.$questionId'
+import { Route as AuthenticatedQuestionsEditQuestionIdImport } from './routes/_authenticated/questions/edit.$questionId'
+import { Route as AuthenticatedQuestionsAddSolutionsQuestionIdImport } from './routes/_authenticated/questions/add-solutions.$questionId'
 
 // Create/Update Routes
 
@@ -33,48 +34,54 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
-const QuestionsCreateRoute = QuestionsCreateImport.update({
-  id: '/questions/create',
-  path: '/questions/create',
-  getParentRoute: () => rootRoute,
-} as any)
+const AuthenticatedQuestionsCreateRoute =
+  AuthenticatedQuestionsCreateImport.update({
+    id: '/questions/create',
+    path: '/questions/create',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
-const QuestionsPreviewQuestionIdRoute = QuestionsPreviewQuestionIdImport.update(
-  {
+const AuthenticatedQuestionsPreviewQuestionIdRoute =
+  AuthenticatedQuestionsPreviewQuestionIdImport.update({
     id: '/questions/preview/$questionId',
     path: '/questions/preview/$questionId',
-    getParentRoute: () => rootRoute,
-  } as any,
-)
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
-const QuestionsEditQuestionIdRoute = QuestionsEditQuestionIdImport.update({
-  id: '/questions/edit/$questionId',
-  path: '/questions/edit/$questionId',
-  getParentRoute: () => rootRoute,
-} as any)
+const AuthenticatedQuestionsEditQuestionIdRoute =
+  AuthenticatedQuestionsEditQuestionIdImport.update({
+    id: '/questions/edit/$questionId',
+    path: '/questions/edit/$questionId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
-const QuestionsAddSolutionsQuestionIdRoute =
-  QuestionsAddSolutionsQuestionIdImport.update({
+const AuthenticatedQuestionsAddSolutionsQuestionIdRoute =
+  AuthenticatedQuestionsAddSolutionsQuestionIdImport.update({
     id: '/questions/add-solutions/$questionId',
     path: '/questions/add-solutions/$questionId',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => AuthenticatedRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -91,119 +98,145 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
     }
-    '/questions/create': {
-      id: '/questions/create'
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/questions/create': {
+      id: '/_authenticated/questions/create'
       path: '/questions/create'
       fullPath: '/questions/create'
-      preLoaderRoute: typeof QuestionsCreateImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedQuestionsCreateImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/questions/add-solutions/$questionId': {
-      id: '/questions/add-solutions/$questionId'
+    '/_authenticated/questions/add-solutions/$questionId': {
+      id: '/_authenticated/questions/add-solutions/$questionId'
       path: '/questions/add-solutions/$questionId'
       fullPath: '/questions/add-solutions/$questionId'
-      preLoaderRoute: typeof QuestionsAddSolutionsQuestionIdImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedQuestionsAddSolutionsQuestionIdImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/questions/edit/$questionId': {
-      id: '/questions/edit/$questionId'
+    '/_authenticated/questions/edit/$questionId': {
+      id: '/_authenticated/questions/edit/$questionId'
       path: '/questions/edit/$questionId'
       fullPath: '/questions/edit/$questionId'
-      preLoaderRoute: typeof QuestionsEditQuestionIdImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedQuestionsEditQuestionIdImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/questions/preview/$questionId': {
-      id: '/questions/preview/$questionId'
+    '/_authenticated/questions/preview/$questionId': {
+      id: '/_authenticated/questions/preview/$questionId'
       path: '/questions/preview/$questionId'
       fullPath: '/questions/preview/$questionId'
-      preLoaderRoute: typeof QuestionsPreviewQuestionIdImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedQuestionsPreviewQuestionIdImport
+      parentRoute: typeof AuthenticatedImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedQuestionsCreateRoute: typeof AuthenticatedQuestionsCreateRoute
+  AuthenticatedQuestionsAddSolutionsQuestionIdRoute: typeof AuthenticatedQuestionsAddSolutionsQuestionIdRoute
+  AuthenticatedQuestionsEditQuestionIdRoute: typeof AuthenticatedQuestionsEditQuestionIdRoute
+  AuthenticatedQuestionsPreviewQuestionIdRoute: typeof AuthenticatedQuestionsPreviewQuestionIdRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedQuestionsCreateRoute: AuthenticatedQuestionsCreateRoute,
+  AuthenticatedQuestionsAddSolutionsQuestionIdRoute:
+    AuthenticatedQuestionsAddSolutionsQuestionIdRoute,
+  AuthenticatedQuestionsEditQuestionIdRoute:
+    AuthenticatedQuestionsEditQuestionIdRoute,
+  AuthenticatedQuestionsPreviewQuestionIdRoute:
+    AuthenticatedQuestionsPreviewQuestionIdRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/questions/create': typeof QuestionsCreateRoute
-  '/questions/add-solutions/$questionId': typeof QuestionsAddSolutionsQuestionIdRoute
-  '/questions/edit/$questionId': typeof QuestionsEditQuestionIdRoute
-  '/questions/preview/$questionId': typeof QuestionsPreviewQuestionIdRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/questions/create': typeof AuthenticatedQuestionsCreateRoute
+  '/questions/add-solutions/$questionId': typeof AuthenticatedQuestionsAddSolutionsQuestionIdRoute
+  '/questions/edit/$questionId': typeof AuthenticatedQuestionsEditQuestionIdRoute
+  '/questions/preview/$questionId': typeof AuthenticatedQuestionsPreviewQuestionIdRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/questions/create': typeof QuestionsCreateRoute
-  '/questions/add-solutions/$questionId': typeof QuestionsAddSolutionsQuestionIdRoute
-  '/questions/edit/$questionId': typeof QuestionsEditQuestionIdRoute
-  '/questions/preview/$questionId': typeof QuestionsPreviewQuestionIdRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/questions/create': typeof AuthenticatedQuestionsCreateRoute
+  '/questions/add-solutions/$questionId': typeof AuthenticatedQuestionsAddSolutionsQuestionIdRoute
+  '/questions/edit/$questionId': typeof AuthenticatedQuestionsEditQuestionIdRoute
+  '/questions/preview/$questionId': typeof AuthenticatedQuestionsPreviewQuestionIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/questions/create': typeof QuestionsCreateRoute
-  '/questions/add-solutions/$questionId': typeof QuestionsAddSolutionsQuestionIdRoute
-  '/questions/edit/$questionId': typeof QuestionsEditQuestionIdRoute
-  '/questions/preview/$questionId': typeof QuestionsPreviewQuestionIdRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/questions/create': typeof AuthenticatedQuestionsCreateRoute
+  '/_authenticated/questions/add-solutions/$questionId': typeof AuthenticatedQuestionsAddSolutionsQuestionIdRoute
+  '/_authenticated/questions/edit/$questionId': typeof AuthenticatedQuestionsEditQuestionIdRoute
+  '/_authenticated/questions/preview/$questionId': typeof AuthenticatedQuestionsPreviewQuestionIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
+    | ''
     | '/login'
     | '/register'
+    | '/'
     | '/questions/create'
     | '/questions/add-solutions/$questionId'
     | '/questions/edit/$questionId'
     | '/questions/preview/$questionId'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/login'
     | '/register'
+    | '/'
     | '/questions/create'
     | '/questions/add-solutions/$questionId'
     | '/questions/edit/$questionId'
     | '/questions/preview/$questionId'
   id:
     | '__root__'
-    | '/'
+    | '/_authenticated'
     | '/login'
     | '/register'
-    | '/questions/create'
-    | '/questions/add-solutions/$questionId'
-    | '/questions/edit/$questionId'
-    | '/questions/preview/$questionId'
+    | '/_authenticated/'
+    | '/_authenticated/questions/create'
+    | '/_authenticated/questions/add-solutions/$questionId'
+    | '/_authenticated/questions/edit/$questionId'
+    | '/_authenticated/questions/preview/$questionId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
-  QuestionsCreateRoute: typeof QuestionsCreateRoute
-  QuestionsAddSolutionsQuestionIdRoute: typeof QuestionsAddSolutionsQuestionIdRoute
-  QuestionsEditQuestionIdRoute: typeof QuestionsEditQuestionIdRoute
-  QuestionsPreviewQuestionIdRoute: typeof QuestionsPreviewQuestionIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
-  QuestionsCreateRoute: QuestionsCreateRoute,
-  QuestionsAddSolutionsQuestionIdRoute: QuestionsAddSolutionsQuestionIdRoute,
-  QuestionsEditQuestionIdRoute: QuestionsEditQuestionIdRoute,
-  QuestionsPreviewQuestionIdRoute: QuestionsPreviewQuestionIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -216,17 +249,20 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
+        "/_authenticated",
         "/login",
-        "/register",
-        "/questions/create",
-        "/questions/add-solutions/$questionId",
-        "/questions/edit/$questionId",
-        "/questions/preview/$questionId"
+        "/register"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx",
+      "children": [
+        "/_authenticated/",
+        "/_authenticated/questions/create",
+        "/_authenticated/questions/add-solutions/$questionId",
+        "/_authenticated/questions/edit/$questionId",
+        "/_authenticated/questions/preview/$questionId"
+      ]
     },
     "/login": {
       "filePath": "login.tsx"
@@ -234,17 +270,25 @@ export const routeTree = rootRoute
     "/register": {
       "filePath": "register.tsx"
     },
-    "/questions/create": {
-      "filePath": "questions/create.tsx"
+    "/_authenticated/": {
+      "filePath": "_authenticated/index.tsx",
+      "parent": "/_authenticated"
     },
-    "/questions/add-solutions/$questionId": {
-      "filePath": "questions/add-solutions.$questionId.tsx"
+    "/_authenticated/questions/create": {
+      "filePath": "_authenticated/questions/create.tsx",
+      "parent": "/_authenticated"
     },
-    "/questions/edit/$questionId": {
-      "filePath": "questions/edit.$questionId.tsx"
+    "/_authenticated/questions/add-solutions/$questionId": {
+      "filePath": "_authenticated/questions/add-solutions.$questionId.tsx",
+      "parent": "/_authenticated"
     },
-    "/questions/preview/$questionId": {
-      "filePath": "questions/preview.$questionId.tsx"
+    "/_authenticated/questions/edit/$questionId": {
+      "filePath": "_authenticated/questions/edit.$questionId.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/questions/preview/$questionId": {
+      "filePath": "_authenticated/questions/preview.$questionId.tsx",
+      "parent": "/_authenticated"
     }
   }
 }

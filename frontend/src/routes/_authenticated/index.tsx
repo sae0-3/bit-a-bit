@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { FaPlus } from 'react-icons/fa'
 
-import { CardQuestion } from '../components/CardQuestion'
-import { useGetQuestions } from '../hooks/useQuestions'
+import { CardQuestion } from '../../components/CardQuestion'
+import { useGetQuestions } from '../../hooks/useQuestions'
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/_authenticated/')({
   component: IndexQuestionComponent,
 })
 

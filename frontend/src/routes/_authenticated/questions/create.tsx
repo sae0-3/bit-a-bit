@@ -1,10 +1,10 @@
 import { createFileRoute, useCanGoBack, useRouter } from '@tanstack/react-router'
 
-import { FormQuestion } from '../../components/FormQuestion'
-import { useCreateQuestion } from '../../hooks/useQuestions'
-import { useQuestionFormStore } from '../../stores/question-form.store'
+import { FormQuestion } from '../../../components/FormQuestion'
+import { useCreateQuestion } from '../../../hooks/useQuestions'
+import { useQuestionFormStore } from '../../../stores/question-form.store'
 
-export const Route = createFileRoute('/questions/create')({
+export const Route = createFileRoute('/_authenticated/questions/create')({
   component: CreateQuestionComponent,
 })
 
