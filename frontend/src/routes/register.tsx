@@ -1,7 +1,19 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
+
+import { useAuthStore } from '../stores/auth.store'
 
 export const Route = createFileRoute('/register')({
   component: RegisterComponent,
+  beforeLoad: () => {
+    const { isAuthenticated } = useAuthStore.getState()
+
+    if (isAuthenticated()) {
+      return redirect({
+        to: '/',
+        replace: true,
+      })
+    }
+  },
 })
 
 function RegisterComponent() {
