@@ -24,7 +24,7 @@ export const NumberCards = ({ number, targetSequence = [] }: NumberCardsProps) =
               type: "spring",
               stiffness: 400,
               damping: 25,
-              delay: idx * 0.1
+              delay: idx * 0.01
             }}
             whileHover={{ scale: 1.05 }}
             className={`
