@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react'
-import { AiOutlineAlignLeft, AiOutlineExclamationCircle } from 'react-icons/ai'
+import { AiOutlineAlignLeft } from 'react-icons/ai'
 import { FaEdit } from 'react-icons/fa'
 import { GoTag } from 'react-icons/go'
 import { HiHashtag } from 'react-icons/hi2'
+import { IoIosInformationCircleOutline } from 'react-icons/io'
 
 import { useQuestionFormStore } from '../stores/question-form.store'
 import { NumberCards } from './NumberCards'
@@ -65,7 +66,7 @@ export const FormQuestion = ({
     <form
       id={formId}
       onSubmit={onSubmit}
-      className="w-full bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-300 group">
+      className="w-full bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 group">
       <div className="p-3 space-y-2.5 sm:p-6">
         <div className="flex items-center gap-3 pb-4 border-b border-secondary-gray/70">
           <div className="w-10 h-10 bg-primary-dark/10 rounded-xl flex items-center justify-center group-hover:bg-primary-dark/20 transition-colors">
@@ -122,7 +123,7 @@ export const FormQuestion = ({
             onChange={(e) => setDescription(e.target.value)}
           />
           <p className="text-xs text-primary-dark/50 flex items-center gap-1">
-            <AiOutlineExclamationCircle className="w-3 h-3" />
+            <IoIosInformationCircleOutline className="w-3 h-3" />
             Agrega contexto adicional que ayude a entender mejor la pregunta
           </p>
         </div>
@@ -154,7 +155,7 @@ export const FormQuestion = ({
             disabled={!editable}
           />
           <p className="text-xs text-primary-dark/50 flex items-center gap-1">
-            <AiOutlineExclamationCircle className="w-3 h-3" />
+            <IoIosInformationCircleOutline className="w-3 h-3" />
             Solo números, sin espacios ni caracteres especiales
           </p>
         </div>
