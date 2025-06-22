@@ -1,11 +1,12 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
-
 import { useState } from 'react'
+import { AiOutlineExclamationCircle } from 'react-icons/ai'
+import { FaCheckCircle, FaLock, FaUser, FaUserPlus } from 'react-icons/fa'
+import { LuAtSign, LuEye, LuEyeOff } from 'react-icons/lu'
+
 import { useRegister } from '../hooks/useAuth'
 import { registerSchema } from '../dtos/register-dto'
-import { LuEye } from 'react-icons/lu'
-
 import { useAuthStore } from '../stores/auth.store'
 
 export const Route = createFileRoute('/register')({
@@ -23,11 +24,12 @@ export const Route = createFileRoute('/register')({
 })
 
 function RegisterComponent() {
+  const { mutate: register, isPending, isError } = useRegister()
   const [showPasswords, setShowPasswords] = useState<{ password: boolean; confirmPassword: boolean }>({
     password: false,
     confirmPassword: false,
   })
-  const { mutate: register, isError } = useRegister()
+
   const form = useForm({
     defaultValues: {
       email: '',
@@ -39,7 +41,7 @@ function RegisterComponent() {
       register(value)
     },
     validators: {
-      onSubmit: { ...registerSchema, },
+      onSubmit: registerSchema,
     },
   })
 
@@ -49,131 +51,219 @@ function RegisterComponent() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-lg font-bold mb-6 text-center">Question Editor</h2>
+    <section className="min-h-screen flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-6 flex flex-col justify-center items-center">
+          <div className="w-14 aspect-square bg-gradient-to-br from-primary-dark to-secondary-1 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+            <FaCheckCircle className="text-primary-light text-4xl" />
+          </div>
+          <h1 className="text-2xl font-bold text-primary-dark mb-1 mt-0.5">QuestEditor</h1>
+          <p className="text-primary-dark/70 text-sm">Crea tu cuenta para comenzar</p>
+        </div>
 
-        <h2 className="text-2xl font-bold mb-6 text-center">Crear Cuenta</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <form.Field
-              name="name"
-              children={(field) => (
-                <>
-                  <label className="block mb-1 font-medium">Nombre de usuario</label>
-                  <input
-                    id={field.name}
-                    value={field.state.value}
-                    name={field.name}
-                    type="text"
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                    placeholder="juan123"
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                  {!field.state.meta.isValid && (
-                    <p className="text-red-500">
-                      {(field.state.meta.errors[0]?.message)}
-                    </p>
-                  )}
-                </>
-              )}
-            />
-          </div>
-          <div className="mb-4">
-            <form.Field
-              name="email"
-              children={(field) => (
-                <>
-                  <label className="block mb-1 font-medium">Correo electrónico</label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    type="email"
-                    className="w-full border border-gray-300 rounded px-3 py-2"
-                    placeholder="correo@ejemplo.com"
-                  />
-                  {!field.state.meta.isValid && (
-                    <p className="text-red-500">
-                      {(field.state.meta.errors[0]?.message)}
-                    </p>
-                  )}
-                </>
-              )}
-            />
-          </div>
-          <div className="mb-4">
-            <form.Field
-              name="password"
-              children={(field) => (
-                <>
-                  <label className="block mb-1 font-medium">Contraseña</label>
-                  <div className='relative'>
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-300 group">
+          <form onSubmit={handleSubmit} className="space-y-3 p-6">
+            <div className="space-y-2">
+              <form.Field
+                name="name"
+                children={(field) => (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-secondary-1/10 rounded-lg flex items-center justify-center">
+                        <FaUser className="w-4 h-4 text-secondary-1" />
+                      </div>
+                      <label htmlFor={field.name} className="font-medium text-primary-dark">
+                        Nombre de usuario <span className="text-accent-red">*</span>
+                      </label>
+                    </div>
                     <input
                       id={field.name}
                       name={field.name}
+                      type="text"
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      type={showPasswords.password ? 'text' : 'password'}
-                      className="w-full border border-gray-300 rounded px-3 py-2"
-                      placeholder="••••••"
+                      className="w-full px-4 py-3 bg-white/50 backdrop-blur-sm border border-secondary-gray/30 rounded-xl focus:outline-none focus:border-secondary-1 focus:ring-2 focus:ring-secondary-1/20 transition-all duration-200 text-primary-dark placeholder-primary-dark/50"
+                      placeholder="juan123"
+                      required
+                      aria-required="true"
                     />
-                    <LuEye
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-                      onClick={() => { setShowPasswords({ ...showPasswords, password: !showPasswords.password }) }} />
-                  </div>
-                  {!field.state.meta.isValid && (
-                    <p className="text-red-500">
-                      {(field.state.meta.errors[0]?.message)}
-                    </p>
-                  )}
-                </>
-              )}
-            />
-          </div>
-          <div className="mb-6">
-            <form.Field
-              name="confirmPassword"
-              children={(field) => (
-                <>
-                  <label className="block mb-1 font-medium">Confirmar contraseña</label>
-                  <div className='relative'>
+                    {!field.state.meta.isValid && field.state.meta.errors.length > 0 && (
+                      <p className="text-accent-red text-sm flex items-center gap-1 mt-1">
+                        <AiOutlineExclamationCircle className="text-lg" />
+                        {field.state.meta.errors[0]?.message}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <form.Field
+                name="email"
+                children={(field) => (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-secondary-1/10 rounded-lg flex items-center justify-center">
+                        <LuAtSign className="w-4 h-4 text-secondary-1" />
+                      </div>
+                      <label htmlFor={field.name} className="font-medium text-primary-dark">
+                        Correo electrónico <span className="text-accent-red">*</span>
+                      </label>
+                    </div>
                     <input
                       id={field.name}
                       name={field.name}
+                      type="email"
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      type={showPasswords.confirmPassword ? 'text' : 'password'}
-                      className="w-full border border-gray-300 rounded px-3 py-2"
-                      placeholder="••••••"
+                      className="w-full px-4 py-3 bg-white/50 backdrop-blur-sm border border-secondary-gray/30 rounded-xl focus:outline-none focus:border-secondary-1 focus:ring-2 focus:ring-secondary-1/20 transition-all duration-200 text-primary-dark placeholder-primary-dark/50"
+                      placeholder="correo@ejemplo.com"
+                      required
+                      aria-required="true"
                     />
-                    <LuEye
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
-                      onClick={() => { setShowPasswords({ ...showPasswords, confirmPassword: !showPasswords.confirmPassword }) }} />
-                  </div>
-                  {!field.state.meta.isValid && (
-                    <p className="text-red-500">
-                      {(field.state.meta.errors[0]?.message)}
-                    </p>
-                  )}
-                </>
-              )}
-            />
-          </div>
+                    {!field.state.meta.isValid && field.state.meta.errors.length > 0 && (
+                      <p className="text-accent-red text-sm flex items-center gap-1 mt-1">
+                        <AiOutlineExclamationCircle className="text-lg" />
+                        {field.state.meta.errors[0]?.message}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            </div>
 
-          {isError && (
-            <p className="text-red-500 mb-4 text-center">Credenciales inválidas</p>
-          )}
+            <div className="space-y-2">
+              <form.Field
+                name="password"
+                children={(field) => (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-secondary-2/10 rounded-lg flex items-center justify-center">
+                        <FaLock className="w-4 h-4 text-secondary-1" />
+                      </div>
+                      <label htmlFor={field.name} className="font-medium text-primary-dark">
+                        Contraseña <span className="text-accent-red">*</span>
+                      </label>
+                    </div>
+                    <div className="relative">
+                      <input
+                        id={field.name}
+                        name={field.name}
+                        type={showPasswords.password ? 'text' : 'password'}
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="w-full px-4 py-3 pr-12 bg-white/50 backdrop-blur-sm border border-secondary-gray/30 rounded-xl focus:outline-none focus:border-secondary-1 focus:ring-2 focus:ring-secondary-1/20 transition-all duration-200 text-primary-dark placeholder-primary-dark/50"
+                        placeholder="••••••••"
+                        required
+                        aria-required="true"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPasswords({ ...showPasswords, password: !showPasswords.password })}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-dark/50 hover:text-secondary-1 transition-colors duration-200 p-1 rounded-lg hover:bg-secondary-1/10 hover:cursor-pointer"
+                        title={showPasswords.password ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                      >
+                        {showPasswords.password ? <LuEyeOff size={20} /> : <LuEye size={20} />}
+                      </button>
+                    </div>
+                    {!field.state.meta.isValid && field.state.meta.errors.length > 0 && (
+                      <p className="text-accent-red text-sm flex items-center gap-1 mt-1">
+                        <AiOutlineExclamationCircle className="text-lg" />
+                        {field.state.meta.errors[0]?.message}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            </div>
 
-          <button
-            type="submit"
-            className="w-full bg-primary-dark text-white py-2 rounded hover:bg-secondary-1 hover:text-black transition"
-          >
-            Registrarse
-          </button>
-        </form>
+            <div className="space-y-2">
+              <form.Field
+                name="confirmPassword"
+                children={(field) => (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-secondary-2/10 rounded-lg flex items-center justify-center">
+                        <FaLock className="w-4 h-4 text-secondary-1" />
+                      </div>
+                      <label htmlFor={field.name} className="font-medium text-primary-dark">
+                        Confirmar contraseña <span className="text-accent-red">*</span>
+                      </label>
+                    </div>
+                    <div className="relative">
+                      <input
+                        id={field.name}
+                        name={field.name}
+                        type={showPasswords.confirmPassword ? 'text' : 'password'}
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="w-full px-4 py-3 pr-12 bg-white/50 backdrop-blur-sm border border-secondary-gray/30 rounded-xl focus:outline-none focus:border-secondary-1 focus:ring-2 focus:ring-secondary-1/20 transition-all duration-200 text-primary-dark placeholder-primary-dark/50"
+                        placeholder="••••••••"
+                        required
+                        aria-required="true"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPasswords({ ...showPasswords, confirmPassword: !showPasswords.confirmPassword })}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-dark/50 hover:text-secondary-1 transition-colors duration-200 p-1 rounded-lg hover:bg-secondary-1/10 hover:cursor-pointer"
+                        title={showPasswords.confirmPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                      >
+                        {showPasswords.confirmPassword ? <LuEyeOff size={20} /> : <LuEye size={20} />}
+                      </button>
+                    </div>
+                    {!field.state.meta.isValid && field.state.meta.errors.length > 0 && (
+                      <p className="text-accent-red text-sm flex items-center gap-1 mt-1">
+                        <AiOutlineExclamationCircle className="text-lg" />
+                        {field.state.meta.errors[0]?.message}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            </div>
+
+            {isError && (
+              <div className="bg-accent-red/10 border border-accent-red/20 rounded-xl p-4">
+                <p className="text-accent-red text-sm flex items-center gap-2">
+                  <AiOutlineExclamationCircle className="text-xl" />
+                  Error al crear la cuenta. Verifica la información e intenta nuevamente.
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-4 pt-2">
+              <button
+                type="submit"
+                disabled={isPending}
+                className="w-full bg-primary-dark hover:bg-primary-dark/90 disabled:bg-primary-dark/50 text-primary-light py-3 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] disabled:transform-none disabled:cursor-not-allowed font-medium hover:cursor-pointer"
+              >
+                {isPending ? (
+                  <>
+                    <svg className="animate-spin w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Cargando...
+                  </>
+                ) : (
+                  <>
+                    <FaUserPlus size={16} />
+                    Crear cuenta
+                  </>
+                )}
+              </button>
+
+              <Link
+                to="/login"
+                className="flex justify-center items-center gap-2 text-primary-dark/70 hover:text-primary-dark text-sm transition-colors duration-200"
+              >
+                <FaUser size={16} />
+                ¿Ya tienes cuenta?
+              </Link>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
