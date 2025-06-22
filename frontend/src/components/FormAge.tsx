@@ -59,6 +59,7 @@ export const FormAge = ({ update, ...props }: FormAgeProps) => {
           <input
             type="number"
             min={4}
+            max={20}
             value={minAge ?? ''}
             onChange={(e) => handleMinAgeChange(e.target.value)}
             className="w-20 p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-primary-dark"
