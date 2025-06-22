@@ -1,5 +1,6 @@
+import { HiCheckCircle, HiExclamationTriangle, HiSparkles } from 'react-icons/hi2'
+
 import { useCreateSolution, useSolutionValidation } from '../hooks/useSolutions'
-import { useSolutionStore } from '../stores/solutions.store'
 
 interface SubmitSolutionProps {
   questionId: string
@@ -7,10 +8,8 @@ interface SubmitSolutionProps {
 }
 
 export const SubmitSolution = (props: SubmitSolutionProps) => {
-  const { clearAnswer } = useSolutionStore()
   const {
     isValidAnswer,
-    answerCount,
     canSubmit,
     validationMessage
   } = useSolutionValidation()
@@ -22,36 +21,53 @@ export const SubmitSolution = (props: SubmitSolutionProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-2 items-center lg:flex-row lg:justify-between">
-      <div className="flex flex-col gap-2">
-        {validationMessage && (
-          <p className="text-amber-600 text-sm text-center lg:text-left">
-            {validationMessage}
-          </p>
-        )}
+    <div className="space-y-3">
+      {validationMessage && (
+        <div className="flex items-center gap-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+          <HiExclamationTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />
+          <p className="text-sm text-amber-700 font-medium">{validationMessage}</p>
+        </div>
+      )}
 
-        <p className="text-xs text-gray-500 text-center lg:text-left">
-          Estado: {isValidAnswer ? '✅ Válido' : '❌ Inválido'} |
-          Patrones: {answerCount} | {canSubmit ? 'Listo para enviar' : 'No se puede enviar'}
-        </p>
-      </div>
+      <div className="flex justify-between gap-4 flex-wrap">
+        <div className="flex items-center justify-center">
+          <div className={`
+          flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200
+          ${isValidAnswer
+              ? 'bg-green-100 text-green-700 border border-green-200'
+              : 'bg-gray-100 text-gray-600 border border-gray-200'
+            }
+          `}>
+            {isValidAnswer ? (
+              <HiCheckCircle className="w-4 h-4" />
+            ) : (
+              <HiSparkles className="w-4 h-4" />
+            )}
+            <span className="text-sm font-medium">
+              {isValidAnswer ? 'Secuencia válida' : 'Configura tu secuencia'}
+            </span>
+          </div>
+        </div>
 
-      <div className="flex gap-2 justify-end">
-        <button
-          onClick={() => clearAnswer()}
-          disabled={answerCount === 0 || isPending}
-          className="text-gray-600 bg-gray-200 py-2 px-4 rounded-lg flex items-center justify-center hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Limpiar
-        </button>
-
-        <button
-          onClick={handleCreateSolution}
-          disabled={!canSubmit || isPending}
-          className="bg-primary-dark text-white py-2 px-4 rounded-lg flex items-center justify-center hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isPending ? 'Creando...' : 'Crear Solución'}
-        </button>
+        <div className="flex justify-center">
+          <button
+            onClick={handleCreateSolution}
+            disabled={!canSubmit || isPending}
+            className="px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center gap-2 hover:cursor-pointer bg-primary-dark hover:bg-primary-dark/90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
+          >
+            {isPending ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                Creando solución...
+              </>
+            ) : (
+              <>
+                <HiSparkles className="w-4 h-4" />
+                Crear Solución
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   )
