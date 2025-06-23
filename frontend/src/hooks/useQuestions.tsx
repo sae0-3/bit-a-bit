@@ -54,7 +54,7 @@ export const useCreateQuestion = () => {
         queryKey: ['questions', user?.id]
       })
       navigate({
-        to: '/questions/create/$questionId',
+        to: '/questions/add-solutions/$questionId',
         params: { questionId: data.id }
       })
       resetForm()
@@ -66,17 +66,29 @@ export const useCreateQuestion = () => {
 
 export const useUpdateQuestionById = (questionId: string) => {
   const { user } = useAuthStore()
+  const { resetForm } = useQuestionFormStore()
+  const navigate = useNavigate()
 
   return useMutation({
     mutationFn: async (data: UpdateQuestion) => {
       const res = await api.patch(`/questions/${questionId}`, data)
       return res.data
     },
+
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['questions', user?.id]
       })
+      queryClient.invalidateQueries({
+        queryKey: ['question', questionId, user?.id]
+      })
+      navigate({
+        to: '/',
+      })
+      resetForm()
     },
+
+    onError: console.error,
   })
 }
 

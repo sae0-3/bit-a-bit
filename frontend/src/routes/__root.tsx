@@ -1,23 +1,9 @@
-import { createRootRoute, Outlet, useLocation } from '@tanstack/react-router'
-
-import { Header } from '../components/Header'
+import { createRootRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createRootRoute({
-  component: RootComponent,
+  component: () => (
+    <div className="min-h-screen bg-gradient-to-br from-primary-light via-secondary-1/10 to-secondary-2/10">
+      <Outlet />
+    </div>
+  ),
 })
-
-function RootComponent() {
-  const location = useLocation()
-
-  const routesWithoutHeader = ['/login', '/register']
-  const shouldShowHeader = !routesWithoutHeader.includes(location.pathname)
-
-  return (
-    <>
-      {shouldShowHeader && <Header />}
-      <main>
-        <Outlet />
-      </main>
-    </>
-  )
-}

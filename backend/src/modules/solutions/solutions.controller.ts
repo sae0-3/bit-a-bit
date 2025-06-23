@@ -14,12 +14,13 @@ import { RequestUser } from '../auth/interfaces/jwt-payload.interface';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateSolutionDto } from './dto/create-solution.dto';
 import { UpdateSolutionDto } from './dto/update-solution.dto';
+import { ValidateSolutionDto } from './dto/validate-solution.dto';
 import { SolutionsService } from './solutions.service';
 
 @Controller('solutions')
 @UseGuards(JwtAuthGuard)
 export class SolutionsController {
-  constructor(private readonly solutionsService: SolutionsService) {}
+  constructor(private readonly solutionsService: SolutionsService) { }
 
   @Get('question/:questionId')
   findAllByQuestion(
@@ -32,6 +33,14 @@ export class SolutionsController {
   @Get(':id')
   findOne(@User() user: RequestUser, @Param('id') id: string) {
     return this.solutionsService.findById(user.id, id);
+  }
+
+  @Get('random/:questionId')
+  findRandomByQuestion(
+    @User() user: RequestUser,
+    @Param('questionId') questionId: string,
+  ) {
+    return this.solutionsService.findRandomByQuestionId(user.id, questionId);
   }
 
   @Post()
@@ -51,5 +60,29 @@ export class SolutionsController {
   @Delete(':id')
   delete(@User() user: RequestUser, @Param('id') id: string) {
     return this.solutionsService.delete(user.id, id);
+  }
+
+  @Post('Validate')
+  validateSolution(
+    @User() user: RequestUser,
+    @Body() dto: ValidateSolutionDto,
+  ) {
+    return this.solutionsService.validateSolution(user.id, dto);
+  }
+
+  @Post('Validate-All')
+  validateAllSolutions(
+    @User() user: RequestUser,
+    @Body() dto: { question_id: string; path: Array<string>, solution: Array<string> },
+  ) {
+    return this.solutionsService.validateAllSolutions(user.id, dto);
+  }
+
+  @Get('numbers/:questionId')
+  getNumberSolutionsByQuestion(
+    @User() user: RequestUser,
+    @Param('questionId') questionId: string,
+  ) {
+    return this.solutionsService.getNumberSolutionsByQuestion(user.id, questionId)
   }
 }

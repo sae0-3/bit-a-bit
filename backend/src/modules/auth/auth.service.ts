@@ -20,7 +20,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(dto: RegisterDto): Promise<{ message: string }> {
+  async register(dto: RegisterDto) {
     const existing = await this.userRepo.findOne({
       where: { email: dto.email },
     });
@@ -35,10 +35,10 @@ export class AuthService {
     });
 
     await this.userRepo.save(user);
-    return { message: 'Usuario registrado con éxito' };
+    return this.login({ email: dto.email, password: dto.password });
   }
 
-  async login(dto: LoginDto): Promise<{ access_token: string }> {
+  async login(dto: LoginDto) {
     const user = await this.userRepo.findOne({ where: { email: dto.email } });
     if (!user) throw new UnauthorizedException('Credenciales inválidas');
 

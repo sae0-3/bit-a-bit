@@ -2,7 +2,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useEffect, } from 'react'
 import { RiCloseLargeFill } from 'react-icons/ri'
 
-import { useUpdateQuestionById } from '../hooks/useQuestions'
+import { useGetQuestionById, useUpdateQuestionById } from '../hooks/useQuestions'
 import { FormAge } from './FormAge'
 
 interface AddAgeProps {
@@ -12,6 +12,7 @@ interface AddAgeProps {
 }
 
 export const ModalAddAge = ({ questionId, isOpen, onClose }: AddAgeProps) => {
+  const { data: question, isLoading } = useGetQuestionById(questionId)
   const { mutate: update, isPending, isSuccess } = useUpdateQuestionById(questionId)
   const navigate = useNavigate()
 
@@ -20,7 +21,7 @@ export const ModalAddAge = ({ questionId, isOpen, onClose }: AddAgeProps) => {
       navigate({ to: '/' })
   }, [isSuccess])
 
-  if (!isOpen) return null
+  if (!isOpen || isLoading) return null
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -34,7 +35,7 @@ export const ModalAddAge = ({ questionId, isOpen, onClose }: AddAgeProps) => {
 
         <h2 className="text-xl font-semibold text-center text-gray-800">Edad sugerida</h2>
 
-        <FormAge update={update} />
+        <FormAge update={update} minAge={question?.min_age} maxAge={question?.max_age} />
 
         <div className="flex justify-end gap-4">
           <button

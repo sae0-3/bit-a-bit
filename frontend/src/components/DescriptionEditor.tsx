@@ -32,6 +32,7 @@ export const DescriptionEditor = () => {
           className="w-full border-b-2 border-b-gray-300 focus:outline-none focus:border-b-black pb-1"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          required
         />
       </div>
 

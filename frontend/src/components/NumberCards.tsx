@@ -1,52 +1,58 @@
-import { motion } from "framer-motion"
-import { useEffect, useState, useMemo } from "react"
-import { NumberCard } from "./NumberCard"
-import { predefinedOption } from "../types/form-question"
-import { applyNumberOperation, generateNumberItems } from "../utils/numberUtils"
-import { v4 as uuid } from "uuid"
+import { motion } from 'framer-motion'
+import { FaCheck } from 'react-icons/fa'
 
 type NumberCardsProps = {
   number: string[]
-  answer?: predefinedOption[]
+  targetSequence?: string[]
 }
 
-type NumberItem = {
-  id: string
-  value: string
-}
-
-export const NumberCards = ({ number, answer }: NumberCardsProps) => {
-  const initialItems = useMemo(() => generateNumberItems(number), [number])
-  const [numberItems, setNumberItems] = useState<NumberItem[]>(initialItems)
-
-  useEffect(() => {
-    if (answer && answer.length > 0) {
-      let result = initialItems.map((item) => item.id)
-      for (const op of answer) {
-        result = applyNumberOperation(result, op)
-      }
-      const updatedItems = result.map((id) => {
-        const item = initialItems.find((item) => item.id === id)
-        return item ? { ...item } : { id: uuid(), value: "" }
-      })
-      setNumberItems(updatedItems)
-    } else {
-      setNumberItems(initialItems)
-    }
-  }, [initialItems, answer])
+export const NumberCards = ({ number, targetSequence = [] }: NumberCardsProps) => {
+  const isEqualLength = number.length === targetSequence.length
 
   return (
-    <div className="flex flex-wrap gap-4 pt-2 justify-center items-center w-full p-4">
-      {numberItems.map((item) => (
-        <motion.div
-          key={item.id}
-          layout
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="flex items-center justify-center w-16 h-16 bg-gray-200 rounded-lg shadow-md"
-        >
-          <NumberCard number={item.value} />
-        </motion.div>
-      ))}
+    <div className="flex flex-wrap gap-3 justify-center items-center w-full">
+      {number.map((item, idx) => {
+        const isMatching = isEqualLength && item === targetSequence[idx]
+
+        return (
+          <motion.div
+            key={idx}
+            layout
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 25,
+              delay: idx * 0.01
+            }}
+            whileHover={{ scale: 1.05 }}
+            className={`
+              relative flex items-center justify-center w-14 h-14 rounded-xl shadow-lg
+              transition-all duration-300 ease-out
+              ${isMatching
+                ? 'bg-gradient-to-br from-secondary-2 to-secondary-1 text-white shadow-secondary-1/30'
+                : 'bg-white/90 text-primary-dark shadow-primary-dark/10 border border-secondary-gray/30'
+              }
+            `}
+          >
+            <span className="text-lg font-bold">
+              {item}
+            </span>
+
+            {isMatching && (
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.1, type: "spring", stiffness: 500 }}
+                className="absolute -top-1 -right-1 w-5 h-5 bg-secondary-1 rounded-full flex items-center justify-center shadow-lg"
+              >
+                <FaCheck className="text-primary-light text-xs" />
+              </motion.div>
+            )}
+          </motion.div>
+        )
+      })}
     </div>
   )
 }

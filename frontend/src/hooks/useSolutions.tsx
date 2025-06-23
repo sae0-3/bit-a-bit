@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, UseMutationOptions, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 
 import api from '../api/axios'
@@ -8,6 +8,7 @@ import { useSolutionStore } from '../stores/solutions.store'
 import {
   CreateSolutionResponse,
   SolutionsResponse,
+  ValidateSolutionResponse,
 } from '../types/solutions'
 
 export const useSolutionValidation = () => {
@@ -112,5 +113,60 @@ export const useTransformSequence = () => {
     },
 
     onError: console.error,
+  })
+}
+
+export const useGetRandomSolution = (questionId: string) => {
+  const { user } = useAuthStore()
+
+  return useQuery<SolutionsResponse>({
+    queryKey: ['solutions', 'random', questionId, user?.id],
+    queryFn: async () => {
+      const res = await api.get(`/solutions/random/${questionId}`)
+      return res.data
+    },
+  })
+}
+
+export const useValidateSolution = (options?: UseMutationOptions<ValidateSolutionResponse, AxiosError, string>) => {
+  const { answerCodes } = useSolutionStore()
+
+  return useMutation<ValidateSolutionResponse, AxiosError, string>({
+    mutationFn: async (solutionId: string) => {
+      const res = await api.post('/solutions/Validate', {
+        path: answerCodes,
+        solution_id: solutionId,
+      })
+      return res.data
+    },
+    ...options
+  })
+}
+
+export const useGetNumberSolutionsByQuestion = (questionId: string) => {
+  const { user } = useAuthStore()
+
+  return useQuery<Array<Array<string>>>({
+    queryKey: ['solutions', 'numbers', questionId, user?.id],
+    queryFn: async () => {
+      const res = await api.get(`/solutions/numbers/${questionId}`)
+      return res.data
+    },
+  })
+}
+
+export const useValidateAllSolutions = (options?: UseMutationOptions<ValidateSolutionResponse, AxiosError, string>) => {
+  const { answerCodes, finalSequence } = useSolutionStore()
+
+  return useMutation<ValidateSolutionResponse, AxiosError, string>({
+    mutationFn: async (question_id: string) => {
+      const res = await api.post('/solutions/Validate-All', {
+        question_id: question_id,
+        solution: finalSequence,
+        path: answerCodes,
+      })
+      return res.data
+    },
+    ...options,
   })
 }
