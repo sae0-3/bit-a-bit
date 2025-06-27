@@ -8,11 +8,16 @@ export interface Item {
 export interface SolutionState {
   initialSequence: Array<string>
   finalSequence: Array<string>
+  sequenceIds: Array<string>
   answerList: Item[]
   answerCodes: Array<string>
+  lastSequenceIds: Array<string>
 
   setInitialSequence: (sequence: Array<string>) => void
   setFinalSequence: (sequence: Array<string>) => void
+  setSequenceIds: (ids: Array<string>) => void
+  setInitialIds: (sequence: Array<string>) => void
+  setLastSequenceIds: (ids: Array<string>) => void
   addToAnswer: (item: Item) => void
   removeFromAnswer: (itemId: string) => void
   reorderAnswer: (oldIndex: number, newIndex: number) => void

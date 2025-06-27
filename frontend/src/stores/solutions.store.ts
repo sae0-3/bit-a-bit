@@ -5,8 +5,10 @@ import { SolutionState } from '../types/solutions'
 export const useSolutionStore = create<SolutionState>((set, get) => ({
   initialSequence: [],
   finalSequence: [],
+  sequenceIds: [],
   answerList: [],
   answerCodes: [],
+  lastSequenceIds: [],
 
   addToAnswer: (item) => {
     set((state) => {
@@ -45,19 +47,47 @@ export const useSolutionStore = create<SolutionState>((set, get) => ({
     })
   },
 
-  clearAnswer: () => {
-    set({
-      answerList: [],
-      answerCodes: [],
-      finalSequence: get().initialSequence,
-    })
-  },
-
-  setInitialSequence: (sequence) => {
-    set({ initialSequence: sequence, finalSequence: sequence })
-  },
-
   setFinalSequence: (sequence) => {
     set({ finalSequence: sequence })
   },
+
+  clearAnswer: () => {
+    const initial = get().initialSequence;
+    set({
+      answerList: [],
+      answerCodes: [],
+      finalSequence: initial,
+    })
+    get().setInitialIds(initial);
+  },
+
+  setInitialSequence: (sequence) => {
+    const newIds = sequence.map((_, i) => `card-${i}`);
+    set({
+      initialSequence: sequence,
+      finalSequence: sequence,
+      sequenceIds: newIds,
+      lastSequenceIds: [...newIds],
+    })
+  },
+
+  setInitialIds: (sequence) => {
+    const newIds = sequence.map((_, i) => `card-${i}`);
+    set({
+      sequenceIds: newIds,
+      lastSequenceIds: [...newIds]
+    });
+  },
+
+  setSequenceIds: (ids) => {
+    const currentIds = get().sequenceIds;
+    set({
+      sequenceIds: ids,
+      lastSequenceIds: [...currentIds],
+    })
+  },
+
+  setLastSequenceIds: (ids) => {
+    set({ lastSequenceIds: ids })
+  }
 }))

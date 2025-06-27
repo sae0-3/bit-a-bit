@@ -97,19 +97,27 @@ export const useDeleteSolutionById = (questionId: string) => {
 }
 
 export const useTransformSequence = () => {
-  const { initialSequence, setFinalSequence, answerCodes } = useSolutionStore()
+  const {
+    initialSequence,
+    setFinalSequence,
+    setSequenceIds,
+    answerCodes,
+    sequenceIds
+  } = useSolutionStore()
 
-  return useMutation<Array<string>, AxiosError, void>({
+  return useMutation({
     mutationFn: async () => {
       const res = await api.post('/patterns/transform', {
         sequence: initialSequence,
-        path: answerCodes
+        path: answerCodes,
+        ids: sequenceIds,
       })
       return res.data
     },
 
     onSuccess: (data) => {
-      setFinalSequence(data)
+      setFinalSequence(data.sequence)
+      setSequenceIds(data.ids)
     },
 
     onError: console.error,
