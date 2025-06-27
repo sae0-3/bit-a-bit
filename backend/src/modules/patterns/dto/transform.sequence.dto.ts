@@ -9,4 +9,8 @@ export class TransformSequenceDto {
   @ArrayNotEmpty()
   @IsString({ each: true })
   path: string[];
+
+  @IsArray()
+  @ArrayNotEmpty()
+  ids?: Array<string | number>;
 }

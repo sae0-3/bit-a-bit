@@ -52,7 +52,7 @@ export class SolutionsService {
     const solution = this.validSolutionRepo.create({
       question,
       path,
-      final_sequence,
+      final_sequence: final_sequence.sequence,
     });
 
     return this.validSolutionRepo.save(solution);
@@ -73,7 +73,7 @@ export class SolutionsService {
     });
 
     solution.path = dto.path;
-    solution.final_sequence = final_sequence;
+    solution.final_sequence = final_sequence.sequence;
 
     return this.validSolutionRepo.save(solution);
   }

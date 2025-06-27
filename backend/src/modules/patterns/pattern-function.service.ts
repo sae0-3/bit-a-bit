@@ -103,9 +103,10 @@ export class PatternFunctionsService {
     return Object.keys(this.patterns);
   }
 
-  transformSequence(data: TransformSequenceDto): Array<string | number> {
-    const { sequence, path } = data;
+  transformSequence(data: TransformSequenceDto): { sequence: Array<string | number>, ids?: Array<string | number> } {
+    const { sequence, path, ids = [] } = data;
     let baseSequence = [...sequence];
+    let baseIds = [...ids]
 
     for (const code of path) {
       const fn = this.getFunctionByCode(code);
@@ -114,8 +115,13 @@ export class PatternFunctionsService {
       }
 
       baseSequence = fn(baseSequence);
+      if (baseIds) {
+        baseIds = fn(baseIds);
+      }
     }
-
-    return baseSequence;
+    return {
+      sequence: baseSequence,
+      ids: baseIds,
+    };
   }
 }
